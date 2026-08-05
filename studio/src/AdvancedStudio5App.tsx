@@ -20,6 +20,11 @@ import {GeometryTemplate18} from "../../src/GeometryTemplate18";
 import {GeometryTemplate19} from "../../src/GeometryTemplate19";
 import {GeometryTemplate20} from "../../src/GeometryTemplate20";
 import {GeometryTemplate21} from "../../src/GeometryTemplate21";
+import {GeometryTemplate22} from "../../src/GeometryTemplate22";
+import {GeometryTemplate24} from "../../src/GeometryTemplate24";
+import {GeometryTemplate25} from "../../src/GeometryTemplate25";
+import {GeometryTemplate26} from "../../src/GeometryTemplate26";
+import {GeometryTemplate29} from "../../src/GeometryTemplate29";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -213,6 +218,41 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     name: "Elastic Stretch",
     subtitle: "Spring Surface",
     component: GeometryTemplate21,
+  },
+  {
+    id: "product-echo",
+    number: "22",
+    name: "Product Echo",
+    subtitle: "Temporal Depth",
+    component: GeometryTemplate22,
+  },
+  {
+    id: "product-tunnel",
+    number: "24",
+    name: "Product Tunnel",
+    subtitle: "Perspective Copies",
+    component: GeometryTemplate24,
+  },
+  {
+    id: "venetian-blinds",
+    number: "25",
+    name: "Venetian Blinds",
+    subtitle: "Rotating Panels",
+    component: GeometryTemplate25,
+  },
+  {
+    id: "exploded-layers",
+    number: "26",
+    name: "Exploded Layers",
+    subtitle: "Depth Slices",
+    component: GeometryTemplate26,
+  },
+  {
+    id: "accordion-fold",
+    number: "29",
+    name: "Accordion Fold",
+    subtitle: "Zig-Zag Surface",
+    component: GeometryTemplate29,
   },
 ];
 
