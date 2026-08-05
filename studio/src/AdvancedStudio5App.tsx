@@ -862,11 +862,38 @@ export const AdvancedStudio5App: React.FC = () => {
     setRenderState("rendering");
     setRenderMessage("Rendering the exact preview composition…");
     try {
-      const response = await fetch("/api/render-advanced2", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(project),
-      });
+      const isTemplate57 =
+        selectedGeometryTemplate.number ===
+        "57";
+
+      const response =
+        await fetch(
+          isTemplate57
+            ? "/api/render-advanced5-template57"
+            : "/api/render-advanced2",
+          {
+            method:
+              "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body:
+              JSON.stringify(
+                isTemplate57
+                  ? {
+                      imageSrc:
+                        project.imageSrc,
+
+                      formatId:
+                        project.formatId,
+                    }
+                  : project,
+              ),
+          },
+        );
       const result = (await response.json()) as {
         ok?: boolean;
         downloadUrl?: string;
@@ -900,7 +927,12 @@ export const AdvancedStudio5App: React.FC = () => {
           {renderState === "complete" ? (
             <a
               className="as2-button secondary"
-              href={`/api/export-advanced2/${project.formatId}`}
+              href={
+                selectedGeometryTemplate.number ===
+                "57"
+                  ? `/api/export-advanced5-template57/${project.formatId}`
+                  : `/api/export-advanced2/${project.formatId}`
+              }
             >
               <Download size={18} /> Download MP4
             </a>

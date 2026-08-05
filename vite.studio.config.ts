@@ -983,6 +983,296 @@ const studioApi = (): Plugin => ({
         return;
       }
 
+      if (
+        request.url === "/api/render-advanced5-template57" &&
+        request.method === "POST"
+      ) {
+        try {
+          const body =
+            await readBody(
+              request,
+            );
+
+          const props =
+            JSON.parse(
+              body,
+            );
+
+          const formatId =
+            props.formatId ??
+            "vertical";
+
+          if (
+            ![
+              "portrait",
+              "square",
+              "vertical",
+            ].includes(
+              formatId,
+            )
+          ) {
+            throw new Error(
+              "Invalid Template 57 format.",
+            );
+          }
+
+          if (
+            typeof props.imageSrc !==
+              "string" ||
+            props.imageSrc.length ===
+              0
+          ) {
+            throw new Error(
+              "Template 57 requires a product image.",
+            );
+          }
+
+          const compositionId =
+            formatId ===
+              "square"
+              ? "AdvancedStudio5Template57Square"
+              : formatId ===
+                  "vertical"
+                ? "AdvancedStudio5Template57Vertical"
+                : "AdvancedStudio5Template57Portrait";
+
+          fs.mkdirSync(
+            path.resolve(
+              "output",
+            ),
+            {
+              recursive:
+                true,
+            },
+          );
+
+          const propsPath =
+            path.resolve(
+              "output/advanced-studio5-template57-project.json",
+            );
+
+          fs.writeFileSync(
+            propsPath,
+            JSON.stringify(
+              {
+                imageSrc:
+                  props.imageSrc,
+              },
+              null,
+              2,
+            ),
+          );
+
+          const outputPath =
+            `output/advanced-studio5-template57-${formatId}.mp4`;
+
+          const child =
+            spawn(
+              "npx",
+              [
+                "remotion",
+                "render",
+
+                "src/advanced-studio5-template57-render.ts",
+
+                compositionId,
+
+                outputPath,
+
+                "--props=output/advanced-studio5-template57-project.json",
+
+                "--public-dir=studio/public",
+
+                "--duration=360",
+
+                "--gl=angle",
+
+                "--overwrite",
+              ],
+              {
+                cwd:
+                  process.cwd(),
+
+                stdio:
+                  "inherit",
+
+                shell:
+                  false,
+              },
+            );
+
+          child.on(
+            "close",
+            (
+              code,
+            ) => {
+              response.statusCode =
+                code === 0
+                  ? 200
+                  : 500;
+
+              response.setHeader(
+                "Content-Type",
+                "application/json",
+              );
+
+              response.end(
+                JSON.stringify({
+                  ok:
+                    code === 0,
+
+                  downloadUrl:
+                    `/api/export-advanced5-template57/${formatId}`,
+
+                  error:
+                    code === 0
+                      ? undefined
+                      : "Template 57 Remotion render failed.",
+                }),
+              );
+            },
+          );
+
+          child.on(
+            "error",
+            (
+              error,
+            ) => {
+              response.statusCode =
+                500;
+
+              response.setHeader(
+                "Content-Type",
+                "application/json",
+              );
+
+              response.end(
+                JSON.stringify({
+                  ok:
+                    false,
+
+                  error:
+                    error.message,
+                }),
+              );
+            },
+          );
+        } catch (
+          error
+        ) {
+          response.statusCode =
+            500;
+
+          response.setHeader(
+            "Content-Type",
+            "application/json",
+          );
+
+          response.end(
+            JSON.stringify({
+              ok:
+                false,
+
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Template 57 render failed.",
+            }),
+          );
+        }
+
+        return;
+      }
+
+      if (
+        request.url?.startsWith(
+          "/api/export-advanced5-template57/",
+        ) &&
+        request.method ===
+          "GET"
+      ) {
+        const formatId =
+          request.url
+            .replace(
+              "/api/export-advanced5-template57/",
+              "",
+            )
+            .split(
+              "?",
+            )[0];
+
+        if (
+          ![
+            "portrait",
+            "square",
+            "vertical",
+          ].includes(
+            formatId,
+          )
+        ) {
+          response.statusCode =
+            400;
+
+          response.end(
+            "Invalid Template 57 format.",
+          );
+
+          return;
+        }
+
+        const fileName =
+          `advanced-studio5-template57-${formatId}.mp4`;
+
+        const filePath =
+          path.resolve(
+            "output",
+            fileName,
+          );
+
+        if (
+          !fs.existsSync(
+            filePath,
+          )
+        ) {
+          response.statusCode =
+            404;
+
+          response.end(
+            "Template 57 export not found.",
+          );
+
+          return;
+        }
+
+        response.statusCode =
+          200;
+
+        response.setHeader(
+          "Content-Type",
+          "video/mp4",
+        );
+
+        response.setHeader(
+          "Content-Disposition",
+          `attachment; filename="${fileName}"`,
+        );
+
+        response.setHeader(
+          "Content-Length",
+          fs.statSync(
+            filePath,
+          ).size,
+        );
+
+        fs.createReadStream(
+          filePath,
+        ).pipe(
+          response,
+        );
+
+        return;
+      }
+
       if (request.url === "/api/render-advanced2" && request.method === "POST") {
         try {
           const body = await readBody(request);
