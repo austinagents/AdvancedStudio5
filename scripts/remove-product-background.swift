@@ -35,6 +35,94 @@ struct MaskResult {
   let bounds: CGRect
 }
 
+func trimMaskTopBottomOnePixel(_ pixelBuffer: CVPixelBuffer) throws {
+  CVPixelBufferLockBaseAddress(pixelBuffer, [])
+
+  defer {
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
+  }
+
+  guard
+    let address = CVPixelBufferGetBaseAddress(pixelBuffer)
+  else {
+    throw BackgroundRemovalError.maskCreationFailed
+  }
+
+  let width = CVPixelBufferGetWidth(pixelBuffer)
+  let height = CVPixelBufferGetHeight(pixelBuffer)
+  let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+
+  let base =
+    address.assumingMemoryBound(to: UInt8.self)
+
+  /*
+   * FINAL SILHOUETTE CLEANUP
+   *
+   * Sides stay untouched.
+   * Remove two alpha rows from only the
+   * TOP and BOTTOM of each product column.
+   */
+  for x in 0..<width {
+    var top = -1
+    var bottom = -1
+
+    for y in 0..<height {
+      let row =
+        base.advanced(
+          by: y * bytesPerRow
+        )
+
+      if row[x] > 0 {
+        top = y
+        break
+      }
+    }
+
+    if top < 0 {
+      continue
+    }
+
+    for y in stride(
+      from: height - 1,
+      through: 0,
+      by: -1
+    ) {
+      let row =
+        base.advanced(
+          by: y * bytesPerRow
+        )
+
+      if row[x] > 0 {
+        bottom = y
+        break
+      }
+    }
+
+    for offset in 0...5 {
+      let ty = top + offset
+      let by = bottom - offset
+
+      if ty >= 0 && ty < height {
+        let row =
+          base.advanced(
+            by: ty * bytesPerRow
+          )
+
+        row[x] = 0
+      }
+
+      if by >= 0 && by < height && by != ty {
+        let row =
+          base.advanced(
+            by: by * bytesPerRow
+          )
+
+        row[x] = 0
+      }
+    }
+  }
+}
+
 func erodeMaskOnePixel(_ pixelBuffer: CVPixelBuffer) throws {
   CVPixelBufferLockBaseAddress(pixelBuffer, [])
 
@@ -256,6 +344,9 @@ func makeSolidProductMask(
   try erodeMaskOnePixel(maskBuffer)
   try erodeMaskOnePixel(maskBuffer)
   try erodeMaskOnePixel(maskBuffer)
+
+  // Final targeted cleanup: top and bottom only.
+  try trimMaskTopBottomOnePixel(maskBuffer)
 
   /*
    * Find the ACTUAL final alpha bounds after refinement.
