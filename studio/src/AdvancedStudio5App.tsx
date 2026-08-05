@@ -54,16 +54,6 @@ import {GeometryTemplate53} from "../../src/GeometryTemplate53";
 import {GeometryTemplate54} from "../../src/GeometryTemplate54";
 import {GeometryTemplate55} from "../../src/GeometryTemplate55";
 import {GeometryTemplate56} from "../../src/GeometryTemplate56";
-import {GeometryTemplate57} from "../../src/Product Templates 2/GeometryTemplate57";
-import {GeometryTemplate58} from "../../src/Product Templates 2/GeometryTemplate58";
-import {GeometryTemplate59} from "../../src/Product Templates 2/GeometryTemplate59";
-import {GeometryTemplate60} from "../../src/Product Templates 2/GeometryTemplate60";
-import {GeometryTemplate61} from "../../src/Product Templates 2/GeometryTemplate61";
-import {GeometryTemplate62} from "../../src/Product Templates 2/GeometryTemplate62";
-import {GeometryTemplate63} from "../../src/Product Templates 2/GeometryTemplate63";
-import {GeometryTemplate64} from "../../src/Product Templates 2/GeometryTemplate64";
-import {GeometryTemplate65} from "../../src/Product Templates 2/GeometryTemplate65";
-import {GeometryTemplate66} from "../../src/Product Templates 2/GeometryTemplate66";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -499,76 +489,6 @@ const geometryTemplates: GeometryTemplateEntry[] = [
   },
 
 
-  {
-    id: "pt2-articulated-strips",
-    number: "57",
-    name: "Articulated Strips",
-    subtitle: "Independent Product Strips",
-    component: GeometryTemplate57,
-  },
-  {
-    id: "pt2-section-stack",
-    number: "58",
-    name: "Section Stack",
-    subtitle: "Transverse Depth Sections",
-    component: GeometryTemplate58,
-  },
-  {
-    id: "pt2-faceted-assembly",
-    number: "59",
-    name: "Faceted Assembly",
-    subtitle: "Independent Product Facets",
-    component: GeometryTemplate59,
-  },
-  {
-    id: "pt2-contour-architecture",
-    number: "60",
-    name: "Contour Architecture",
-    subtitle: "Silhouette Structures",
-    component: GeometryTemplate60,
-  },
-  {
-    id: "pt2-hinged-panels",
-    number: "61",
-    name: "Hinged Panels",
-    subtitle: "Articulated Product Panels",
-    component: GeometryTemplate61,
-  },
-  {
-    id: "pt2-depth-layers",
-    number: "62",
-    name: "Depth Layers",
-    subtitle: "Separated Structural Planes",
-    component: GeometryTemplate62,
-  },
-  {
-    id: "pt2-structural-fragmentation",
-    number: "63",
-    name: "Structural Fragmentation",
-    subtitle: "Independent Product Pieces",
-    component: GeometryTemplate63,
-  },
-  {
-    id: "pt2-extruded-sections",
-    number: "64",
-    name: "Extruded Sections",
-    subtitle: "Volumetric Product Sections",
-    component: GeometryTemplate64,
-  },
-  {
-    id: "pt2-ribbon-construction",
-    number: "65",
-    name: "Ribbon Construction",
-    subtitle: "Continuous Product Ribbons",
-    component: GeometryTemplate65,
-  },
-  {
-    id: "pt2-mechanical-reconstruction",
-    number: "66",
-    name: "Mechanical Reconstruction",
-    subtitle: "Structural Product Assembly",
-    component: GeometryTemplate66,
-  },
 
 ];
 
@@ -581,7 +501,7 @@ const productTemplates1Geometry =
 const productTemplates2Geometry =
   geometryTemplates.filter((template) => {
     const number = Number.parseInt(template.number, 10);
-    return number >= 57 && number <= 66;
+    return number >= 57;
   });
 
 const formats: Array<{id: ProductVideoFormat; label: string; meta: string}> = [
