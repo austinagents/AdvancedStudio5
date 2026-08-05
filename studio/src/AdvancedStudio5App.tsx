@@ -1,5 +1,15 @@
 import React from "react";
 import {GeometryTemplate01} from "../../src/GeometryTemplate01";
+import {GeometryTemplate02} from "../../src/GeometryTemplate02";
+import {GeometryTemplate03} from "../../src/GeometryTemplate03";
+import {GeometryTemplate04} from "../../src/GeometryTemplate04";
+import {GeometryTemplate05} from "../../src/GeometryTemplate05";
+import {GeometryTemplate06} from "../../src/GeometryTemplate06";
+import {GeometryTemplate07} from "../../src/GeometryTemplate07";
+import {GeometryTemplate08} from "../../src/GeometryTemplate08";
+import {GeometryTemplate09} from "../../src/GeometryTemplate09";
+import {GeometryTemplate10} from "../../src/GeometryTemplate10";
+import {GeometryTemplate11} from "../../src/GeometryTemplate11";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -36,6 +46,96 @@ import type {
   PolyHavenTextureSelection,
 } from "../../src/advanced-studio2/polyhaven-assets";
 
+type GeometryTemplateEntry = {
+  id: string;
+  number: string;
+  name: string;
+  subtitle: string;
+  component: React.ComponentType<{
+    imageSrc?: string;
+  }>;
+};
+
+const geometryTemplates: GeometryTemplateEntry[] = [
+  {
+    id: "particle-assembly",
+    number: "01",
+    name: "Particle Assembly",
+    subtitle: "Geometry Field",
+    component: GeometryTemplate01,
+  },
+  {
+    id: "voxel-reconstruction",
+    number: "02",
+    name: "Voxel Reconstruction",
+    subtitle: "Product Cubes",
+    component: GeometryTemplate02,
+  },
+  {
+    id: "ribbon-weave",
+    number: "03",
+    name: "Ribbon Weave",
+    subtitle: "Product Strips",
+    component: GeometryTemplate03,
+  },
+  {
+    id: "radial-shatter",
+    number: "04",
+    name: "Radial Shatter",
+    subtitle: "Fragment Collapse",
+    component: GeometryTemplate04,
+  },
+  {
+    id: "layer-stack",
+    number: "05",
+    name: "Layer Stack",
+    subtitle: "Contour Slices",
+    component: GeometryTemplate05,
+  },
+  {
+    id: "helix-assembly",
+    number: "06",
+    name: "Helix Assembly",
+    subtitle: "Spiral Geometry",
+    component: GeometryTemplate06,
+  },
+  {
+    id: "magnetic-field",
+    number: "07",
+    name: "Magnetic Field",
+    subtitle: "Field Convergence",
+    component: GeometryTemplate07,
+  },
+  {
+    id: "liquid-pixels",
+    number: "08",
+    name: "Liquid Pixels",
+    subtitle: "Product Droplets",
+    component: GeometryTemplate08,
+  },
+  {
+    id: "origami-fold",
+    number: "09",
+    name: "Origami Fold",
+    subtitle: "Surface Folding",
+    component: GeometryTemplate09,
+  },
+  {
+    id: "scanline-build",
+    number: "10",
+    name: "Scanline Build",
+    subtitle: "Sequential Slices",
+    component: GeometryTemplate10,
+  },
+  {
+    id: "implosion-tunnel",
+    number: "11",
+    name: "Implosion Tunnel",
+    subtitle: "Depth Collapse",
+    component: GeometryTemplate11,
+  },
+];
+
 const formats: Array<{id: ProductVideoFormat; label: string; meta: string}> = [
   {id: "portrait", label: "Portrait", meta: "1080 × 1350"},
   {id: "square", label: "Square", meta: "1080 × 1080"},
@@ -64,6 +164,13 @@ const defaultState: ProductVideoProps = {
 
 export const AdvancedStudio5App: React.FC = () => {
   const playerRef = React.useRef<PlayerRef>(null);
+
+  const [
+    selectedGeometryTemplateId,
+    setSelectedGeometryTemplateId,
+  ] = React.useState(
+    geometryTemplates[0].id,
+  );
   const [project, setProject] = React.useState<ProductVideoProps>(defaultState);
   const [isTemplateLibraryExpanded, setIsTemplateLibraryExpanded] =
     React.useState(true);
@@ -86,6 +193,13 @@ export const AdvancedStudio5App: React.FC = () => {
     "idle" | "loading" | "downloading" | "error"
   >("idle");
   const [polyHavenMessage, setPolyHavenMessage] = React.useState("");
+  const selectedGeometryTemplate =
+    geometryTemplates.find(
+      (template) =>
+        template.id ===
+        selectedGeometryTemplateId,
+    ) ?? geometryTemplates[0];
+
   const format = productVideoFormats[project.formatId];
   const selectedTemplate =
     productTemplates.find((item) => item.id === project.templateId) ??
@@ -426,7 +540,7 @@ export const AdvancedStudio5App: React.FC = () => {
             </span>
             <div>
               <strong>Product Templates 1</strong>
-              <small>1 template</small>
+              <small>{geometryTemplates.length} templates</small>
             </div>
             <ChevronDown
               className="as2-folder-chevron"
@@ -438,33 +552,79 @@ export const AdvancedStudio5App: React.FC = () => {
           {isTemplateLibraryExpanded ? (
             <div className="as2-template-library-folders">
               <div className="as2-template-grid">
-                <button
-                  className="as2-template-card selected"
-                  type="button"
-                  onClick={() => {
-                    playerRef.current?.seekTo(0);
-                    window.setTimeout(() => playerRef.current?.play(), 50);
-                  }}
-                >
-                  <div
-                    className="as2-template-art"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 50% 40%, #253650, #07090d 72%)",
-                      color: "#ffffff",
-                      borderColor: "#8fc5ff55",
-                    }}
-                  >
-                    <span style={{background: "#b9dcff"}} />
-                    <b>01</b>
-                    <em>ASSEMBLY</em>
-                  </div>
+                {geometryTemplates.map(
+                  (template) => {
+                    const selected =
+                      selectedGeometryTemplate.id ===
+                      template.id;
 
-                  <div>
-                    <strong>Particle Assembly</strong>
-                    <small>Geometry Field</small>
-                  </div>
-                </button>
+                    return (
+                      <button
+                        key={template.id}
+                        className={
+                          selected
+                            ? "as2-template-card selected"
+                            : "as2-template-card"
+                        }
+                        type="button"
+                        onClick={() => {
+                          setSelectedGeometryTemplateId(
+                            template.id,
+                          );
+
+                          playerRef.current?.seekTo(0);
+
+                          window.setTimeout(
+                            () =>
+                              playerRef.current?.play(),
+                            50,
+                          );
+                        }}
+                      >
+                        <div
+                          className="as2-template-art"
+                          style={{
+                            background:
+                              "radial-gradient(circle at 50% 40%, #253650, #07090d 72%)",
+                            color: "#ffffff",
+                            borderColor:
+                              selected
+                                ? "#8fc5ff88"
+                                : "#8fc5ff33",
+                          }}
+                        >
+                          <span
+                            style={{
+                              background:
+                                "#b9dcff",
+                            }}
+                          />
+
+                          <b>
+                            {template.number}
+                          </b>
+
+                          <em>
+                            {template.number ===
+                            "01"
+                              ? "ASSEMBLY"
+                              : "GEOMETRY"}
+                          </em>
+                        </div>
+
+                        <div>
+                          <strong>
+                            {template.name}
+                          </strong>
+
+                          <small>
+                            {template.subtitle}
+                          </small>
+                        </div>
+                      </button>
+                    );
+                  },
+                )}
               </div>
             </div>
           ) : null}
@@ -475,7 +635,7 @@ export const AdvancedStudio5App: React.FC = () => {
             <div>
               <MonitorPlay size={17} />
               <strong>Live composition</strong>
-              <span>Particle Assembly</span>
+              <span>{selectedGeometryTemplate.name}</span>
             </div>
             <div className="as2-format-tabs">
               {formats.map((item) => (
@@ -499,7 +659,7 @@ export const AdvancedStudio5App: React.FC = () => {
             >
               <Player
                 ref={playerRef}
-                component={GeometryTemplate01}
+                component={selectedGeometryTemplate.component}
                 inputProps={{imageSrc: project.imageSrc}}
                 durationInFrames={180}
                 fps={30}
