@@ -303,32 +303,51 @@ const ProductAssembly: React.FC<{
 
   const material =
     useMemo(() => {
-      return new THREE.ShaderMaterial({
-        transparent: true,
-        depthWrite: true,
-        side: THREE.FrontSide,
-        uniforms: {
-          map: {
-            value: texture,
-          },
-          assembly: {
-            value: 0,
-          },
-          pointPhase: {
-            value: 0,
-          },
-        },
-        vertexShader: `
-          attribute vec3 assemblyStart;
+      /*
+       * IMPORTANT:
+       * Use the SAME material pipeline as the accepted
+       * ProductMesh so assembly=1 renders identically.
+       *
+       * We modify only the vertex positions.
+       * Three.js keeps ownership of texture sampling,
+       * sRGB handling, alpha and final color output.
+       */
+      const m =
+        new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+          alphaTest: 0,
+          depthWrite: true,
+          toneMapped: false,
+          side: THREE.FrontSide,
+        });
 
-          uniform float assembly;
-          uniform float pointPhase;
+      m.onBeforeCompile = (shader) => {
+        shader.uniforms.assembly = {
+          value: 0,
+        };
 
-          varying vec2 vUv;
+        shader.uniforms.pointPhase = {
+          value: 0,
+        };
 
-          void main() {
-            vUv = uv;
+        shader.vertexShader =
+          shader.vertexShader.replace(
+            "void main() {",
+            `
+            attribute vec3 assemblyStart;
 
+            uniform float assembly;
+            uniform float pointPhase;
+
+            void main() {
+            `,
+          );
+
+        shader.vertexShader =
+          shader.vertexShader.replace(
+            "#include <begin_vertex>",
+            `
             vec3 target =
               position;
 
@@ -356,8 +375,7 @@ const ProductAssembly: React.FC<{
               stagger *
               (
                 3.0 -
-                2.0 *
-                stagger
+                2.0 * stagger
               );
 
             vec3 dispersed =
@@ -366,49 +384,27 @@ const ProductAssembly: React.FC<{
             dispersed.z +=
               sin(
                 pointPhase +
-                position.y *
-                2.0
+                position.y * 2.0
               ) * 0.22;
 
-            vec3 assembled =
+            vec3 transformed =
               mix(
                 dispersed,
                 target,
                 eased
               );
+            `,
+          );
 
-            gl_Position =
-              projectionMatrix *
-              modelViewMatrix *
-              vec4(
-                assembled,
-                1.0
-              );
-          }
-        `,
-        fragmentShader: `
-          uniform sampler2D map;
-          varying vec2 vUv;
+        m.userData.shader =
+          shader;
+      };
 
-          void main() {
-            vec4 product =
-              texture2D(
-                map,
-                vUv
-              );
+      m.customProgramCacheKey =
+        () =>
+          "as5-product-geometry-v1";
 
-            if (
-              product.a <
-              0.002
-            ) {
-              discard;
-            }
-
-            gl_FragColor =
-              product;
-          }
-        `,
-      });
+      return m;
     }, [texture]);
 
   const assembly =
@@ -426,13 +422,29 @@ const ProductAssembly: React.FC<{
         ),
     });
 
-  material.uniforms
-    .assembly.value =
-      assembly;
+  const compiledShader =
+    material.userData.shader as
+      | {
+          uniforms: {
+            assembly: {
+              value: number;
+            };
+            pointPhase: {
+              value: number;
+            };
+          };
+        }
+      | undefined;
 
-  material.uniforms
-    .pointPhase.value =
-      frame * 0.045;
+  if (compiledShader) {
+    compiledShader.uniforms
+      .assembly.value =
+        assembly;
+
+    compiledShader.uniforms
+      .pointPhase.value =
+        frame * 0.045;
+  }
 
   /*
    * Keep the exact existing
