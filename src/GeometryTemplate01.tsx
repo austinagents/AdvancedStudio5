@@ -1,5 +1,6 @@
 import React, {Suspense, useMemo} from "react";
 import {ThreeCanvas} from "@remotion/three";
+import {useTexture} from "@react-three/drei";
 import * as THREE from "three";
 import {
   AbsoluteFill,
@@ -9,13 +10,157 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import {ProductMesh} from "./advanced-studio5/ProductMesh";
-
 export type GeometryTemplate01Props = {
   imageSrc?: string;
 };
 
-const PARTICLE_COUNT = 1800;
+type ProductAnalysis = {
+  planeWidth: number;
+  planeHeight: number;
+  offsetX: number;
+  offsetY: number;
+};
+
+const analyzeProduct = (
+  image: HTMLImageElement,
+): ProductAnalysis => {
+  const width =
+    image.naturalWidth || image.width;
+
+  const height =
+    image.naturalHeight || image.height;
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx =
+    canvas.getContext("2d", {
+      willReadFrequently: true,
+    });
+
+  if (!ctx) {
+    throw new Error(
+      "Unable to analyze product image.",
+    );
+  }
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height,
+  );
+
+  ctx.drawImage(
+    image,
+    0,
+    0,
+    width,
+    height,
+  );
+
+  const pixels =
+    ctx.getImageData(
+      0,
+      0,
+      width,
+      height,
+    ).data;
+
+  let minX = width;
+  let maxX = -1;
+  let minY = height;
+  let maxY = -1;
+
+  for (
+    let y = 0;
+    y < height;
+    y++
+  ) {
+    for (
+      let x = 0;
+      x < width;
+      x++
+    ) {
+      const alpha =
+        pixels[
+          (y * width + x) *
+            4 +
+          3
+        ];
+
+      if (alpha > 1) {
+        minX =
+          Math.min(minX, x);
+
+        maxX =
+          Math.max(maxX, x);
+
+        minY =
+          Math.min(minY, y);
+
+        maxY =
+          Math.max(maxY, y);
+      }
+    }
+  }
+
+  if (
+    maxX < minX ||
+    maxY < minY
+  ) {
+    throw new Error(
+      "No product silhouette found.",
+    );
+  }
+
+  /*
+   * EXACTLY match ProductMesh.tsx.
+   */
+  const visiblePixelsW =
+    maxX - minX + 1;
+
+  const visiblePixelsH =
+    maxY - minY + 1;
+
+  const visibleHeight = 5.55;
+
+  const planeHeight =
+    visibleHeight *
+    (height / visiblePixelsH);
+
+  const planeWidth =
+    planeHeight *
+    (width / height);
+
+  const centerX =
+    (minX + maxX + 1) / 2;
+
+  const centerY =
+    (minY + maxY + 1) / 2;
+
+  const offsetX =
+    -(
+      (centerX / width - 0.5) *
+      planeWidth
+    );
+
+  const offsetY =
+    (
+      centerY / height - 0.5
+    ) *
+    planeHeight;
+
+  return {
+    planeWidth,
+    planeHeight,
+    offsetX,
+    offsetY,
+  };
+};
 
 const seeded = (
   index: number,
@@ -30,222 +175,338 @@ const seeded = (
   return x - Math.floor(x);
 };
 
-const ParticleField: React.FC<{
+const ProductAssembly: React.FC<{
+  imageSrc: string;
   frame: number;
   fps: number;
-}> = ({frame, fps}) => {
-  const geometry = useMemo(() => {
-    const positions =
-      new Float32Array(
-        PARTICLE_COUNT * 3,
-      );
+}> = ({
+  imageSrc,
+  frame,
+  fps,
+}) => {
+  const texture =
+    useTexture(imageSrc);
 
-    const starts =
-      new Float32Array(
-        PARTICLE_COUNT * 3,
-      );
+  texture.colorSpace =
+    THREE.SRGBColorSpace;
 
-    const targets =
-      new Float32Array(
-        PARTICLE_COUNT * 3,
-      );
+  texture.wrapS =
+    THREE.ClampToEdgeWrapping;
 
-    for (
-      let i = 0;
-      i < PARTICLE_COUNT;
-      i++
-    ) {
-      const i3 = i * 3;
+  texture.wrapT =
+    THREE.ClampToEdgeWrapping;
 
-      const angle =
-        seeded(i, 1) *
-        Math.PI *
-        2;
+  texture.magFilter =
+    THREE.LinearFilter;
 
-      const radius =
-        5 +
-        seeded(i, 2) * 7;
+  texture.minFilter =
+    THREE.LinearMipmapLinearFilter;
 
-      starts[i3] =
-        Math.cos(angle) * radius;
+  texture.generateMipmaps = true;
 
-      starts[i3 + 1] =
-        (seeded(i, 3) - 0.5) *
-        10;
+  texture.anisotropy = 16;
 
-      starts[i3 + 2] =
-        (seeded(i, 4) - 0.5) *
-        7;
+  texture.needsUpdate = true;
 
-      const y =
-        (seeded(i, 5) - 0.5) *
-        6.5;
+  const image =
+    texture.image as HTMLImageElement;
 
-      const width =
-        2.4 *
-        (
-          0.78 +
-          0.22 *
-            Math.cos(
-              Math.abs(y) /
-                3.25 *
-                Math.PI *
-                0.7,
-            )
-        );
-
-      targets[i3] =
-        (seeded(i, 6) - 0.5) *
-        width *
-        2;
-
-      targets[i3 + 1] = y;
-
-      targets[i3 + 2] =
-        (seeded(i, 7) - 0.5) *
-        1.5;
-
-      positions[i3] =
-        starts[i3];
-
-      positions[i3 + 1] =
-        starts[i3 + 1];
-
-      positions[i3 + 2] =
-        starts[i3 + 2];
-    }
-
-    const g =
-      new THREE.BufferGeometry();
-
-    g.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        positions,
-        3,
-      ),
+  const product =
+    useMemo(
+      () =>
+        analyzeProduct(image),
+      [image],
     );
 
-    g.userData.starts = starts;
-    g.userData.targets = targets;
+  /*
+   * Dense procedural grid.
+   *
+   * IMPORTANT:
+   * Texture resolution is NOT limited by this grid.
+   * At full assembly the original product texture
+   * renders continuously across the finished surface.
+   */
+  const geometry =
+    useMemo(() => {
+      const segmentsX = 44;
+      const segmentsY = 128;
 
-    return g;
-  }, []);
+      const g =
+        new THREE.PlaneGeometry(
+          product.planeWidth,
+          product.planeHeight,
+          segmentsX,
+          segmentsY,
+        );
 
-  const assembly = spring({
-    frame,
-    fps,
-    config: {
-      damping: 18,
-      stiffness: 70,
-      mass: 0.8,
-    },
-    durationInFrames:
-      Math.round(fps * 3.2),
-  });
+      const position =
+        g.attributes
+          .position as THREE.BufferAttribute;
 
-  const pulse =
-    Math.sin(frame * 0.045) *
-    0.06;
+      const count =
+        position.count;
 
-  const position =
-    geometry.getAttribute(
-      "position",
-    ) as THREE.BufferAttribute;
+      const starts =
+        new Float32Array(
+          count * 3,
+        );
 
-  const starts =
-    geometry.userData
-      .starts as Float32Array;
+      for (
+        let i = 0;
+        i < count;
+        i++
+      ) {
+        const angle =
+          seeded(i, 1) *
+          Math.PI *
+          2;
 
-  const targets =
-    geometry.userData
-      .targets as Float32Array;
+        const radius =
+          4 +
+          seeded(i, 2) *
+          7;
 
-  for (
-    let i = 0;
-    i < PARTICLE_COUNT;
-    i++
-  ) {
-    const i3 = i * 3;
+        starts[i * 3] =
+          Math.cos(angle) *
+          radius;
 
-    const stagger =
-      Math.max(
-        0,
-        Math.min(
-          1,
-          assembly * 1.3 -
-            seeded(i, 8) *
-              0.32,
+        starts[
+          i * 3 + 1
+        ] =
+          (
+            seeded(i, 3) -
+            0.5
+          ) * 11;
+
+        starts[
+          i * 3 + 2
+        ] =
+          (
+            seeded(i, 4) -
+            0.5
+          ) * 8;
+      }
+
+      g.setAttribute(
+        "assemblyStart",
+        new THREE.BufferAttribute(
+          starts,
+          3,
         ),
       );
 
-    const eased =
-      stagger *
-      stagger *
-      (3 - 2 * stagger);
+      return g;
+    }, [
+      product.planeWidth,
+      product.planeHeight,
+    ]);
 
-    const tx =
-      targets[i3] *
-      (
-        1 +
-        pulse *
-          seeded(i, 9)
-      );
+  const material =
+    useMemo(() => {
+      return new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: true,
+        side: THREE.FrontSide,
+        uniforms: {
+          map: {
+            value: texture,
+          },
+          assembly: {
+            value: 0,
+          },
+          pointPhase: {
+            value: 0,
+          },
+        },
+        vertexShader: `
+          attribute vec3 assemblyStart;
 
-    const ty =
-      targets[i3 + 1] *
-      (
-        1 +
-        pulse *
-          seeded(i, 10)
-      );
+          uniform float assembly;
+          uniform float pointPhase;
 
-    const tz =
-      targets[i3 + 2] +
-      Math.sin(
-        frame * 0.035 +
-          i * 0.17,
-      ) *
-        0.12;
+          varying vec2 vUv;
 
-    position.array[i3] =
-      THREE.MathUtils.lerp(
-        starts[i3],
-        tx,
-        eased,
-      );
+          void main() {
+            vUv = uv;
 
-    position.array[i3 + 1] =
-      THREE.MathUtils.lerp(
-        starts[i3 + 1],
-        ty,
-        eased,
-      );
+            vec3 target =
+              position;
 
-    position.array[i3 + 2] =
-      THREE.MathUtils.lerp(
-        starts[i3 + 2],
-        tz,
-        eased,
-      );
-  }
+            float stagger =
+              clamp(
+                assembly * 1.18 -
+                fract(
+                  sin(
+                    dot(
+                      position.xy,
+                      vec2(
+                        12.9898,
+                        78.233
+                      )
+                    )
+                  ) *
+                  43758.5453
+                ) * 0.18,
+                0.0,
+                1.0
+              );
 
-  position.needsUpdate = true;
+            float eased =
+              stagger *
+              stagger *
+              (
+                3.0 -
+                2.0 *
+                stagger
+              );
+
+            vec3 dispersed =
+              assemblyStart;
+
+            dispersed.z +=
+              sin(
+                pointPhase +
+                position.y *
+                2.0
+              ) * 0.22;
+
+            vec3 assembled =
+              mix(
+                dispersed,
+                target,
+                eased
+              );
+
+            gl_Position =
+              projectionMatrix *
+              modelViewMatrix *
+              vec4(
+                assembled,
+                1.0
+              );
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D map;
+          varying vec2 vUv;
+
+          void main() {
+            vec4 product =
+              texture2D(
+                map,
+                vUv
+              );
+
+            if (
+              product.a <
+              0.002
+            ) {
+              discard;
+            }
+
+            gl_FragColor =
+              product;
+          }
+        `,
+      });
+    }, [texture]);
+
+  const assembly =
+    spring({
+      frame,
+      fps,
+      config: {
+        damping: 18,
+        stiffness: 70,
+        mass: 0.8,
+      },
+      durationInFrames:
+        Math.round(
+          fps * 3.2,
+        ),
+    });
+
+  material.uniforms
+    .assembly.value =
+      assembly;
+
+  material.uniforms
+    .pointPhase.value =
+      frame * 0.045;
+
+  /*
+   * Keep the exact existing
+   * ProductMesh hero motion.
+   */
+  const seconds =
+    frame / fps;
+
+  const rotationY =
+    Math.sin(
+      seconds * 0.8,
+    ) * 0.012;
+
+  const floatY =
+    Math.sin(
+      seconds * 1.1,
+    ) * 0.06;
+
+  /*
+   * Existing product reveal:
+   * 1.2 sec -> 2.7 sec
+   * scale 0.8 -> 1.0
+   */
+  const reveal =
+    interpolate(
+      frame,
+      [
+        fps * 1.2,
+        fps * 2.7,
+      ],
+      [0, 1],
+      {
+        extrapolateLeft:
+          "clamp",
+        extrapolateRight:
+          "clamp",
+      },
+    );
+
+  const heroScale =
+    interpolate(
+      reveal,
+      [0, 1],
+      [0.8, 1],
+    );
 
   return (
-    <points geometry={geometry}>
-      <pointsMaterial
-        size={0.055}
-        sizeAttenuation
-        transparent
-        opacity={0.88}
-        color="#d8e9ff"
-        depthWrite={false}
-        blending={
-          THREE.AdditiveBlending
-        }
+    <group
+      position={[
+        0,
+        floatY,
+        0,
+      ]}
+      rotation={[
+        0,
+        rotationY,
+        0,
+      ]}
+      scale={[
+        heroScale,
+        heroScale,
+        heroScale,
+      ]}
+    >
+      <mesh
+        geometry={geometry}
+        material={material}
+        position={[
+          product.offsetX,
+          product.offsetY,
+          0.012,
+        ]}
       />
-    </points>
+    </group>
   );
 };
 
@@ -258,28 +519,6 @@ const Scene: React.FC<{
   frame,
   fps,
 }) => {
-  const reveal = interpolate(
-    frame,
-    [
-      fps * 1.2,
-      fps * 2.7,
-    ],
-    [0, 1],
-    {
-      extrapolateLeft:
-        "clamp",
-      extrapolateRight:
-        "clamp",
-    },
-  );
-
-  const scale =
-    interpolate(
-      reveal,
-      [0, 1],
-      [0.8, 1],
-    );
-
   return (
     <>
       <ambientLight
@@ -303,28 +542,15 @@ const Scene: React.FC<{
         color="#f7d7aa"
       />
 
-      <ParticleField
-        frame={frame}
-        fps={fps}
-      />
-
-      <group
-        scale={[
-          scale,
-          scale,
-          scale,
-        ]}
-      >
+      {imageSrc ? (
         <Suspense fallback={null}>
-          <ProductMesh
-            imageSrc={
-              imageSrc ?? ""
-            }
+          <ProductAssembly
+            imageSrc={imageSrc}
             frame={frame}
             fps={fps}
           />
         </Suspense>
-      </group>
+      ) : null}
     </>
   );
 };
@@ -354,7 +580,11 @@ export const GeometryTemplate01:
           width={width}
           height={height}
           camera={{
-            position: [0, 0, 9],
+            position: [
+              0,
+              0,
+              9,
+            ],
             fov: 38,
             near: 0.1,
             far: 100,
