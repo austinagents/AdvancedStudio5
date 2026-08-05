@@ -54,6 +54,7 @@ import {GeometryTemplate53} from "../../src/GeometryTemplate53";
 import {GeometryTemplate54} from "../../src/GeometryTemplate54";
 import {GeometryTemplate55} from "../../src/GeometryTemplate55";
 import {GeometryTemplate56} from "../../src/GeometryTemplate56";
+import {GeometryTemplate57} from "../../src/GeometryTemplate57";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -486,6 +487,13 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     name: "Product Field Fusion",
     subtitle: "Multi-Field System",
     component: GeometryTemplate56,
+  },
+  {
+    id: "beveled-volume-field",
+    number: "57",
+    name: "Beveled Volume Field",
+    subtitle: "Product-Driven Volume",
+    component: GeometryTemplate57,
   },
 
 
