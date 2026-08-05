@@ -34,6 +34,16 @@ import {GeometryTemplate33} from "../../src/GeometryTemplate33";
 import {GeometryTemplate34} from "../../src/GeometryTemplate34";
 import {GeometryTemplate35} from "../../src/GeometryTemplate35";
 import {GeometryTemplate36} from "../../src/GeometryTemplate36";
+import {GeometryTemplate37} from "../../src/GeometryTemplate37";
+import {GeometryTemplate38} from "../../src/GeometryTemplate38";
+import {GeometryTemplate39} from "../../src/GeometryTemplate39";
+import {GeometryTemplate40} from "../../src/GeometryTemplate40";
+import {GeometryTemplate41} from "../../src/GeometryTemplate41";
+import {GeometryTemplate42} from "../../src/GeometryTemplate42";
+import {GeometryTemplate43} from "../../src/GeometryTemplate43";
+import {GeometryTemplate44} from "../../src/GeometryTemplate44";
+import {GeometryTemplate45} from "../../src/GeometryTemplate45";
+import {GeometryTemplate46} from "../../src/GeometryTemplate46";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -326,6 +336,77 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     subtitle: "Product-Derived Voxels",
     component: GeometryTemplate36,
   },
+  {
+    id: "contour-terraces",
+    number: "37",
+    name: "Contour Terraces",
+    subtitle: "Silhouette Distance",
+    component: GeometryTemplate37,
+  },
+  {
+    id: "chromatic-field",
+    number: "38",
+    name: "Chromatic Field",
+    subtitle: "RGB Vector Field",
+    component: GeometryTemplate38,
+  },
+  {
+    id: "contrast-emboss",
+    number: "39",
+    name: "Contrast Emboss",
+    subtitle: "Feature Geometry",
+    component: GeometryTemplate39,
+  },
+  {
+    id: "silhouette-normal-burst",
+    number: "40",
+    name: "Silhouette Normal Burst",
+    subtitle: "Alpha Normals",
+    component: GeometryTemplate40,
+  },
+  {
+    id: "luminance-strata",
+    number: "41",
+    name: "Luminance Strata",
+    subtitle: "Image Depth Bands",
+    component: GeometryTemplate41,
+  },
+  {
+    id: "color-region-split",
+    number: "42",
+    name: "Color Region Split",
+    subtitle: "Chromatic Topology",
+    component: GeometryTemplate42,
+  },
+  {
+    id: "gradient-flow",
+    number: "43",
+    name: "Gradient Flow",
+    subtitle: "Image Gradient Field",
+    component: GeometryTemplate43,
+  },
+  {
+    id: "medial-ridge",
+    number: "44",
+    name: "Medial Ridge",
+    subtitle: "Interior Distance",
+    component: GeometryTemplate44,
+  },
+  {
+    id: "edge-distance-cascade",
+    number: "45",
+    name: "Edge Distance Cascade",
+    subtitle: "Contour Wavefront",
+    component: GeometryTemplate45,
+  },
+  {
+    id: "feature-torque",
+    number: "46",
+    name: "Feature Torque",
+    subtitle: "Contrast Driven",
+    component: GeometryTemplate46,
+  },
+
 ];
 
 const formats: Array<{id: ProductVideoFormat; label: string; meta: string}> = [
