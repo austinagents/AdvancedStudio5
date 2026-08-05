@@ -10,6 +10,16 @@ import {GeometryTemplate08} from "../../src/GeometryTemplate08";
 import {GeometryTemplate09} from "../../src/GeometryTemplate09";
 import {GeometryTemplate10} from "../../src/GeometryTemplate10";
 import {GeometryTemplate11} from "../../src/GeometryTemplate11";
+import {GeometryTemplate12} from "../../src/GeometryTemplate12";
+import {GeometryTemplate13} from "../../src/GeometryTemplate13";
+import {GeometryTemplate14} from "../../src/GeometryTemplate14";
+import {GeometryTemplate15} from "../../src/GeometryTemplate15";
+import {GeometryTemplate16} from "../../src/GeometryTemplate16";
+import {GeometryTemplate17} from "../../src/GeometryTemplate17";
+import {GeometryTemplate18} from "../../src/GeometryTemplate18";
+import {GeometryTemplate19} from "../../src/GeometryTemplate19";
+import {GeometryTemplate20} from "../../src/GeometryTemplate20";
+import {GeometryTemplate21} from "../../src/GeometryTemplate21";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -133,6 +143,76 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     name: "Implosion Tunnel",
     subtitle: "Depth Collapse",
     component: GeometryTemplate11,
+  },
+  {
+    id: "wave-field",
+    number: "12",
+    name: "Wave Field",
+    subtitle: "Surface Wave",
+    component: GeometryTemplate12,
+  },
+  {
+    id: "sine-slice",
+    number: "13",
+    name: "Sine Slice",
+    subtitle: "Depth Sections",
+    component: GeometryTemplate13,
+  },
+  {
+    id: "lens-warp",
+    number: "14",
+    name: "Lens Warp",
+    subtitle: "Surface Bulge",
+    component: GeometryTemplate14,
+  },
+  {
+    id: "pinch-inflate",
+    number: "15",
+    name: "Pinch Inflate",
+    subtitle: "Surface Compression",
+    component: GeometryTemplate15,
+  },
+  {
+    id: "twist-column",
+    number: "16",
+    name: "Twist Column",
+    subtitle: "Progressive Rotation",
+    component: GeometryTemplate16,
+  },
+  {
+    id: "shockwave",
+    number: "17",
+    name: "Shockwave",
+    subtitle: "Radial Surface Pulse",
+    component: GeometryTemplate17,
+  },
+  {
+    id: "noise-displacement",
+    number: "18",
+    name: "Noise Displacement",
+    subtitle: "Organic Surface",
+    component: GeometryTemplate18,
+  },
+  {
+    id: "gravity-bend",
+    number: "19",
+    name: "Gravity Bend",
+    subtitle: "Directional Surface",
+    component: GeometryTemplate19,
+  },
+  {
+    id: "ripple-scan",
+    number: "20",
+    name: "Ripple Scan",
+    subtitle: "Traveling Wave",
+    component: GeometryTemplate20,
+  },
+  {
+    id: "elastic-stretch",
+    number: "21",
+    name: "Elastic Stretch",
+    subtitle: "Spring Surface",
+    component: GeometryTemplate21,
   },
 ];
 
