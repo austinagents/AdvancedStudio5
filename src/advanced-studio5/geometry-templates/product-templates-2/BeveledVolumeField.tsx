@@ -55,6 +55,24 @@ type ProductCell = {
   rod: boolean;
 };
 
+type VolumeCell = {
+  source: ProductCell;
+
+  /*
+   * Real physical Z coordinate.
+   * This is not a displacement of a 2D surface.
+   */
+  z: number;
+
+  /*
+   * -1 at back of local stack,
+   * +1 at front of local stack.
+   */
+  zNormalized: number;
+
+  zLayer: number;
+};
+
 const clamp01 = (
   value: number,
 ) =>
@@ -1042,6 +1060,130 @@ const BeveledVolumeScene:
               null,
             );
 
+          /*
+           * TRUE 3D BEVEL VOLUME
+           *
+           * Each valid product XY cell becomes a local stack
+           * of independent beveled cubes through Z.
+           *
+           * This mirrors the important Geometry Nodes idea:
+           *
+           * product footprint
+           * -> volume points
+           * -> cube instances
+           *
+           * rather than:
+           *
+           * product footprint
+           * -> one cube
+           * -> fake Z displacement.
+           */
+          const volumeCells =
+            useMemo(
+              () => {
+                const result:
+                  VolumeCell[] =
+                  [];
+
+                const spacing =
+                  Math.min(
+                    analysis.cellWidth,
+                    analysis.cellHeight,
+                  ) *
+                  0.72;
+
+                for (
+                  const source of
+                  analysis.cells
+                ) {
+                  /*
+                   * Product information controls local
+                   * physical thickness, but thickness is
+                   * expressed as NUMBER OF REAL CUBES.
+                   *
+                   * Minimum: 2
+                   * Typical: 3–5
+                   * Strong regions: up to 7
+                   */
+                  const depthSignal =
+                    clamp01(
+                      source.depth *
+                        0.72 +
+                      source.contrast *
+                        0.18 +
+                      source.edge *
+                        0.1,
+                    );
+
+                  let layerCount =
+                    THREE.MathUtils.clamp(
+                      2 +
+                        Math.round(
+                          depthSignal *
+                            4,
+                        ),
+                      2,
+                      6,
+                    );
+
+                  if (
+                    source.edge +
+                      source.contrast >
+                    1.05
+                  ) {
+                    layerCount =
+                      7;
+                  }
+
+                  const center =
+                    (
+                      layerCount -
+                      1
+                    ) /
+                    2;
+
+                  for (
+                    let layer = 0;
+                    layer <
+                    layerCount;
+                    layer++
+                  ) {
+                    const centeredLayer =
+                      layer -
+                      center;
+
+                    const denominator =
+                      Math.max(
+                        1,
+                        center,
+                      );
+
+                    result.push({
+                      source,
+
+                      z:
+                        centeredLayer *
+                        spacing,
+
+                      zNormalized:
+                        centeredLayer /
+                        denominator,
+
+                      zLayer:
+                        layer,
+                    });
+                  }
+                }
+
+                return result;
+              },
+              [
+                analysis.cellHeight,
+                analysis.cellWidth,
+                analysis.cells,
+              ],
+            );
+
           const cubeRef =
             useRef<
               THREE.InstancedMesh
@@ -1176,32 +1318,26 @@ const BeveledVolumeScene:
               const seconds =
                 timing.seconds;
 
-              const resolve =
-                timing.resolve;
-
               const geometryInfluence =
                 timing.geometryInfluence;
 
               for (
                 let index = 0;
                 index <
-                analysis.cells.length;
+                volumeCells.length;
                 index++
               ) {
-                const cell =
-                  analysis.cells[
+                const volumeCell =
+                  volumeCells[
                     index
                   ];
 
+                const cell =
+                  volumeCell.source;
+
                 /*
-                 * Product-derived bevel color.
-                 *
-                 * RGB is sampled from the actual source
-                 * product at this voxel's position.
-                 *
-                 * Convert sampled sRGB values into Three.js'
-                 * working linear color space before assigning
-                 * the instance color.
+                 * Every physical Z layer inherits the
+                 * product color at its XY position.
                  */
                 voxelColor.setRGB(
                   cell.red,
@@ -1217,54 +1353,77 @@ const BeveledVolumeScene:
                 );
 
                 /*
-                 * Blender tutorial translation:
+                 * TRUE 3D PROCEDURAL FIELD
                  *
-                 * Position
-                 * -> animated coherent noise
-                 * -> ramp
-                 * -> Scale Instances
+                 * The previous implementation evaluated
+                 * noise only from U/V.
                  *
-                 * Two broad noise scales are blended so
-                 * voids remain coherent rather than
-                 * flickering cube-by-cube.
+                 * Here Z participates directly in the
+                 * coordinate field, so different depth
+                 * layers are carved differently while
+                 * remaining spatially coherent.
                  */
-                const fieldX =
-                  cell.u *
-                    4.1 +
-                  seconds *
-                    0.34 *
-                    cell.speed;
-
-                const fieldY =
-                  cell.v *
-                    5.4 -
-                  seconds *
-                    0.58;
+                const zCoordinate =
+                  volumeCell.zNormalized;
 
                 const noiseA =
                   fieldNoise(
-                    fieldX,
-                    fieldY,
+                    cell.u *
+                      4.1 +
+                      zCoordinate *
+                        0.82 +
+                      seconds *
+                        0.34 *
+                        cell.speed,
+
+                    cell.v *
+                      5.4 -
+                      zCoordinate *
+                        0.57 -
+                      seconds *
+                        0.58,
                   );
 
                 const noiseB =
                   fieldNoise(
                     cell.u *
                       2.25 -
+                      zCoordinate *
+                        0.46 -
                       seconds *
                         0.19 +
                       8.7,
+
                     cell.v *
                       3.1 +
+                      zCoordinate *
+                        0.71 +
                       seconds *
                         0.31 -
                       5.4,
                   );
 
                 /*
-                 * Actual product data modifies the
-                 * procedural threshold.
+                 * Third slice reinforces genuine depth
+                 * variation without introducing random
+                 * per-instance flicker.
                  */
+                const noiseZ =
+                  fieldNoise(
+                    zCoordinate *
+                      1.55 +
+                      cell.u *
+                        1.35 +
+                      3.8,
+
+                    zCoordinate *
+                      1.2 +
+                      cell.v *
+                        1.65 -
+                      seconds *
+                        0.24,
+                  );
+
                 const productBias =
                   cell.luma *
                     0.14 -
@@ -1275,23 +1434,23 @@ const BeveledVolumeScene:
 
                 const field =
                   noiseA *
-                    0.68 +
+                    0.52 +
                   noiseB *
-                    0.32 +
+                    0.28 +
+                  noiseZ *
+                    0.2 +
                   productBias;
 
                 /*
-                 * Animated moving void.
-                 *
-                 * Around threshold -> compressed.
-                 * Outside threshold -> full voxel.
+                 * Moving void cuts THROUGH the physical
+                 * volume instead of through one flat sheet.
                  */
                 const threshold =
                   0.43 +
                   Math.sin(
                     seconds *
                       0.72 +
-                      cell.phase,
+                      cell.phase
                   ) *
                     0.025;
 
@@ -1307,78 +1466,112 @@ const BeveledVolumeScene:
                   );
 
                 /*
-                 * STRUCTURAL TOP / BOTTOM BEVEL ZONES
-                 *
-                 * Rods must visually terminate inside
-                 * product-derived beveled geometry.
-                 *
-                 * These are still the actual sampled
-                 * product cells with actual product RGB.
-                 * We simply prevent the procedural noise
-                 * from erasing the structural end zones.
+                 * Preserve the existing product-end
+                 * structural behavior for rod coverage.
                  */
+                /*
+                 * ROD-OCCLUSION END BANDS
+                 *
+                 * The previous 12% / 88% zones forced huge
+                 * nearly-solid slabs at both ends.
+                 *
+                 * We only need a thin population of bevels
+                 * at the physical product ends to interrupt
+                 * the rods visually.
+                 *
+                 * These cells still participate strongly in
+                 * the procedural field. They are NOT caps.
+                 */
+                const distanceFromEnd =
+                  Math.min(
+                    cell.v,
+                    1 - cell.v,
+                  );
+
                 const structuralEndZone =
-                  cell.v <=
-                    0.12 ||
-                  cell.v >=
-                    0.88;
-
-                if (
-                  structuralEndZone
-                ) {
-                  fieldScale =
-                    Math.max(
-                      fieldScale,
-                      0.88,
-                    );
-                }
+                  distanceFromEnd <
+                  0.055;
 
                 /*
-                 * Preserve enough geometry at all times
-                 * to retain the product macro silhouette.
+                 * Smoothly strengthen geometry only as we
+                 * approach the literal product boundary.
+                 *
+                 * At 5.5% inward:
+                 *   no structural assistance.
+                 *
+                 * At the actual edge:
+                 *   enough geometry survives to hide rods.
                  */
-                const activeScale =
+                const endProtection =
                   structuralEndZone
-                    ? THREE.MathUtils.lerp(
-                        0.82,
-                        1,
-                        fieldScale,
+                    ? smooth01(
+                        clamp01(
+                          1 -
+                            distanceFromEnd /
+                              0.055,
+                        ),
                       )
-                    : THREE.MathUtils.lerp(
-                        0.045,
-                        1,
-                        fieldScale,
-                      );
+                    : 0;
 
                 /*
-                 * 4.8–6.0 seconds:
-                 * cubes tighten toward the product plane
-                 * and disappear cleanly.
+                 * Never turn the end into a solid slab.
+                 *
+                 * Maximum forced field occupancy at the
+                 * literal edge is 42%, falling rapidly to
+                 * zero as we move inward.
                  */
+                const protectedFieldScale =
+                  Math.max(
+                    fieldScale,
+                    endProtection *
+                      0.42,
+                  );
+
+                /*
+                 * End cells now retain the same ability to
+                 * collapse/move as the rest of the volume.
+                 *
+                 * Only their minimum scale is gently raised
+                 * near the literal boundary.
+                 */
+                const minimumScale =
+                  THREE.MathUtils.lerp(
+                    0.045,
+                    0.22,
+                    endProtection,
+                  );
+
+                const activeScale =
+                  THREE.MathUtils.lerp(
+                    minimumScale,
+                    1,
+                    protectedFieldScale,
+                  );
+
                 const finalScale =
                   activeScale *
                   geometryInfluence;
 
-                const depthMotion =
-                  (
-                    cell.depth +
-                    Math.sin(
-                      seconds *
-                        1.25 +
-                        cell.phase,
-                    ) *
-                      0.065 *
-                      timing.phase2
+                /*
+                 * Small animation is allowed, but real
+                 * physical layer position is now the
+                 * dominant source of Z depth.
+                 */
+                const animatedZ =
+                  Math.sin(
+                    seconds *
+                      1.25 +
+                      cell.phase +
+                      volumeCell.zLayer *
+                        0.22,
                   ) *
+                  0.035 *
+                  timing.phase2 *
                   geometryInfluence;
 
                 const z =
-                  depthMotion *
-                  (
-                    0.45 +
-                    fieldScale *
-                      0.72
-                  );
+                  volumeCell.z +
+                  animatedZ;
 
                 dummy.position.set(
                   cell.x,
@@ -1392,27 +1585,30 @@ const BeveledVolumeScene:
                       cell.edge -
                       0.5
                     ) *
-                    0.12,
+                    0.08,
+
                   timing.phase2 *
                     (
                       cell.contrast -
                       0.5
                     ) *
-                    0.18,
+                    0.11,
+
                   0,
                 );
 
+                /*
+                 * Each instance remains an individual
+                 * beveled cube.
+                 *
+                 * Do NOT stretch Z to fake depth.
+                 */
                 dummy.scale.set(
                   finalScale,
                   finalScale,
                   Math.max(
                     0.02,
-                    finalScale *
-                      (
-                        0.72 +
-                        cell.depth *
-                          0.48
-                      ),
+                    finalScale,
                   ),
                 );
 
@@ -1435,14 +1631,13 @@ const BeveledVolumeScene:
               }
             },
             [
-              analysis.cells,
               dummy,
-              voxelColor,
               timing.geometryInfluence,
               timing.phase1,
               timing.phase2,
-              timing.resolve,
               timing.seconds,
+              volumeCells,
+              voxelColor,
             ],
           );
 
@@ -2057,7 +2252,7 @@ const BeveledVolumeScene:
                 args={[
                   cubeGeometry,
                   cubeMaterial,
-                  analysis.cells.length,
+                  volumeCells.length,
                 ]}
                 frustumCulled={
                   false
