@@ -1,0 +1,174 @@
+import CoreImage
+import Foundation
+import ImageIO
+import UniformTypeIdentifiers
+import Vision
+
+enum BackgroundRemovalError: LocalizedError {
+  case invalidArguments
+  case noForeground
+  case sourceImageFailed
+  case pngEncodingFailed
+
+  var errorDescription: String? {
+    switch self {
+    case .invalidArguments:
+      return "Expected input and output image paths."
+    case .noForeground:
+      return "Apple Vision could not identify a foreground product."
+    case .sourceImageFailed:
+      return "The source product image could not be loaded."
+    case .pngEncodingFailed:
+      return "The transparent product image could not be encoded."
+    }
+  }
+}
+
+func removeBackground(inputURL: URL, outputURL: URL) throws {
+  let handler = VNImageRequestHandler(url: inputURL)
+
+  let request = VNGenerateForegroundInstanceMaskRequest()
+  try handler.perform([request])
+
+  guard
+    let observation = request.results?.first,
+    !observation.allInstances.isEmpty
+  else {
+    throw BackgroundRemovalError.noForeground
+  }
+
+  /*
+   * Generate the full-resolution Vision mask instead of asking
+   * Vision to composite the final image for us.
+   */
+  let maskBuffer = try observation.generateScaledMaskForImage(
+    forInstances: observation.allInstances,
+    from: handler
+  )
+
+  guard
+    let sourceImage = CIImage(
+      contentsOf: inputURL,
+      options: [.applyOrientationProperty: true]
+    )
+  else {
+    throw BackgroundRemovalError.sourceImageFailed
+  }
+
+  var maskImage = CIImage(cvPixelBuffer: maskBuffer)
+
+  /*
+   * Fill tiny holes inside Vision's foreground mask without
+   * materially changing the product's outer silhouette.
+   *
+   * Maximum -> Minimum is a morphological CLOSE:
+   *   1. restores small missing foreground islands / strokes
+   *   2. fills tiny mask gaps inside labels and fine artwork
+   *   3. returns the exterior edge close to its original position
+   *
+   * This is intentionally different from simply expanding the
+   * entire mask, which can create halos around the product.
+   */
+  maskImage = maskImage
+    .applyingFilter(
+      "CIMorphologyMaximum",
+      parameters: [
+        "inputRadius": 2.0
+      ]
+    )
+    .applyingFilter(
+      "CIMorphologyMinimum",
+      parameters: [
+        "inputRadius": 2.0
+      ]
+    )
+
+  /*
+   * Preserve only a tiny amount of extra edge coverage for
+   * anti-aliased cap / base pixels.
+   */
+  maskImage = maskImage.applyingFilter(
+    "CIMorphologyMaximum",
+    parameters: [
+      "inputRadius": 0.35
+    ]
+  )
+
+  /*
+   * Ensure mask and source occupy exactly the same extent.
+   */
+  maskImage = maskImage
+    .cropped(to: sourceImage.extent)
+
+  let transparentBackground = CIImage(
+    color: CIColor(
+      red: 0,
+      green: 0,
+      blue: 0,
+      alpha: 0
+    )
+  )
+  .cropped(to: sourceImage.extent)
+
+  /*
+   * Composite ORIGINAL product pixels through the refined mask.
+   * We do not modify color, sharpen, resample, or recreate artwork.
+   */
+  let outputImage = sourceImage.applyingFilter(
+    "CIBlendWithMask",
+    parameters: [
+      kCIInputBackgroundImageKey: transparentBackground,
+      kCIInputMaskImageKey: maskImage
+    ]
+  )
+
+  let context = CIContext(
+    options: [
+      .useSoftwareRenderer: false
+    ]
+  )
+
+  let colorSpace =
+    CGColorSpace(
+      name: CGColorSpace.sRGB
+    )!
+
+  guard
+    let png = context.pngRepresentation(
+      of: outputImage,
+      format: .RGBA8,
+      colorSpace: colorSpace
+    )
+  else {
+    throw BackgroundRemovalError.pngEncodingFailed
+  }
+
+  try png.write(
+    to: outputURL,
+    options: .atomic
+  )
+}
+
+do {
+  guard CommandLine.arguments.count == 3 else {
+    throw BackgroundRemovalError.invalidArguments
+  }
+
+  try removeBackground(
+    inputURL: URL(
+      fileURLWithPath:
+        CommandLine.arguments[1]
+    ),
+    outputURL: URL(
+      fileURLWithPath:
+        CommandLine.arguments[2]
+    )
+  )
+} catch {
+  FileHandle.standardError.write(
+    Data(
+      "\(error.localizedDescription)\n".utf8
+    )
+  )
+  exit(1)
+}

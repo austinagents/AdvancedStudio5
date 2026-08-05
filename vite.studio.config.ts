@@ -751,6 +751,14 @@ const studioApi = (): Plugin => ({
           const outputPath = path.join(temporaryDirectory, "product.png");
           fs.writeFileSync(inputPath, image);
 
+          // AS5 QUALITY DEBUG:
+          // preserve the exact original upload before Vision touches it.
+          fs.mkdirSync(path.resolve("debug"), {recursive: true});
+          fs.writeFileSync(
+            path.resolve(`debug/original-upload.${extension}`),
+            image,
+          );
+
           const result = await runProcess("xcrun", [
             "swift",
             path.resolve("scripts/remove-product-background.swift"),
@@ -765,6 +773,21 @@ const studioApi = (): Plugin => ({
           }
 
           const output = fs.readFileSync(outputPath);
+
+          // Preserve the exact processed cutout sent to AS5.
+          fs.mkdirSync(path.resolve("debug"), {recursive: true});
+          fs.writeFileSync(
+            path.resolve("debug/processed-product.png"),
+            output,
+          );
+
+          // DEBUG: keep the latest Vision cutout for inspection.
+          fs.mkdirSync(path.resolve("debug"), {recursive: true});
+          fs.writeFileSync(
+            path.resolve("debug/vision-output.png"),
+            output,
+          );
+
           response.statusCode = 200;
           response.setHeader("Content-Type", "image/png");
           response.setHeader("Content-Length", output.length);

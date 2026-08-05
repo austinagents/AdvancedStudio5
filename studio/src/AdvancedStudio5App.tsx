@@ -1,4 +1,5 @@
 import React from "react";
+import {GeometryTemplate01} from "../../src/GeometryTemplate01";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -173,7 +174,11 @@ export const AdvancedStudio5App: React.FC = () => {
         reader.readAsDataURL(productImage);
       });
       update("imageSrc", imageSrc);
-      setImageMessage("Background removed with Apple Vision.");
+      setImageMessage("Product isolated and converted to 3D.");
+      playerRef.current?.seekTo(0);
+      window.setTimeout(() => {
+        playerRef.current?.play();
+      }, 100);
     } catch (error) {
       setImageMessage(
         error instanceof Error ? error.message : "Background removal failed.",
@@ -421,7 +426,7 @@ export const AdvancedStudio5App: React.FC = () => {
             </span>
             <div>
               <strong>Product Templates 1</strong>
-              <small>0 templates</small>
+              <small>1 template</small>
             </div>
             <ChevronDown
               className="as2-folder-chevron"
@@ -431,7 +436,37 @@ export const AdvancedStudio5App: React.FC = () => {
           </button>
 
           {isTemplateLibraryExpanded ? (
-            <div className="as2-template-library-folders" />
+            <div className="as2-template-library-folders">
+              <div className="as2-template-grid">
+                <button
+                  className="as2-template-card selected"
+                  type="button"
+                  onClick={() => {
+                    playerRef.current?.seekTo(0);
+                    window.setTimeout(() => playerRef.current?.play(), 50);
+                  }}
+                >
+                  <div
+                    className="as2-template-art"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 50% 40%, #253650, #07090d 72%)",
+                      color: "#ffffff",
+                      borderColor: "#8fc5ff55",
+                    }}
+                  >
+                    <span style={{background: "#b9dcff"}} />
+                    <b>01</b>
+                    <em>ASSEMBLY</em>
+                  </div>
+
+                  <div>
+                    <strong>Particle Assembly</strong>
+                    <small>Geometry Field</small>
+                  </div>
+                </button>
+              </div>
+            </div>
           ) : null}
         </aside>
 
@@ -440,7 +475,7 @@ export const AdvancedStudio5App: React.FC = () => {
             <div>
               <MonitorPlay size={17} />
               <strong>Live composition</strong>
-              <span>{selectedTemplate.name}</span>
+              <span>Particle Assembly</span>
             </div>
             <div className="as2-format-tabs">
               {formats.map((item) => (
@@ -464,15 +499,16 @@ export const AdvancedStudio5App: React.FC = () => {
             >
               <Player
                 ref={playerRef}
-                component={ProductVideo}
-                inputProps={project}
-                durationInFrames={durationInFrames}
-                fps={productVideoFps}
+                component={GeometryTemplate01}
+                inputProps={{imageSrc: project.imageSrc}}
+                durationInFrames={180}
+                fps={30}
                 compositionWidth={format.width}
                 compositionHeight={format.height}
                 style={{width: "100%", height: "100%"}}
                 controls
                 loop
+                autoPlay
                 acknowledgeRemotionLicense
               />
             </div>
@@ -487,8 +523,8 @@ export const AdvancedStudio5App: React.FC = () => {
               <Play size={20} fill="currentColor" />
             </button>
             <div>
-              <strong>{durationInFrames / productVideoFps} second product story</strong>
-              <span>Reveal → product proof → call to action</span>
+              <strong>6 second procedural product story</strong>
+              <span>Disperse → assemble → product reveal</span>
             </div>
             <div className="as2-timeline">
               <span />

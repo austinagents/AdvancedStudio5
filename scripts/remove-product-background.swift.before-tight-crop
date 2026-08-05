@@ -1,0 +1,416 @@
+import CoreImage
+import CoreVideo
+import Foundation
+import Vision
+
+enum BackgroundRemovalError: LocalizedError {
+  case invalidArguments
+  case noForeground
+  case sourceImageFailed
+  case maskCreationFailed
+  case pngEncodingFailed
+
+  var errorDescription: String? {
+    switch self {
+    case .invalidArguments:
+      return "Expected input and output image paths."
+    case .noForeground:
+      return "Apple Vision could not identify a foreground product."
+    case .sourceImageFailed:
+      return "The source product image could not be loaded."
+    case .maskCreationFailed:
+      return "The product mask could not be created."
+    case .pngEncodingFailed:
+      return "The transparent product image could not be encoded."
+    }
+  }
+}
+
+func makeSolidProductMask(
+  visionMask: CVPixelBuffer,
+  width: Int,
+  height: Int,
+  context: CIContext
+) throws -> CVPixelBuffer {
+  var outputBuffer: CVPixelBuffer?
+
+  let attributes: [CFString: Any] = [
+    kCVPixelBufferCGImageCompatibilityKey: true,
+    kCVPixelBufferCGBitmapContextCompatibilityKey: true,
+    kCVPixelBufferIOSurfacePropertiesKey: [:]
+  ]
+
+  let status = CVPixelBufferCreate(
+    kCFAllocatorDefault,
+    width,
+    height,
+    kCVPixelFormatType_OneComponent8,
+    attributes as CFDictionary,
+    &outputBuffer
+  )
+
+  guard
+    status == kCVReturnSuccess,
+    let maskBuffer = outputBuffer
+  else {
+    throw BackgroundRemovalError.maskCreationFailed
+  }
+
+  /*
+   * Convert whatever pixel format Vision returned into our own
+   * predictable 8-bit grayscale mask.
+   */
+  var maskImage = CIImage(cvPixelBuffer: visionMask)
+
+  if
+    maskImage.extent.width != CGFloat(width) ||
+    maskImage.extent.height != CGFloat(height)
+  {
+    let sx =
+      CGFloat(width) /
+      maskImage.extent.width
+
+    let sy =
+      CGFloat(height) /
+      maskImage.extent.height
+
+    maskImage = maskImage.transformed(
+      by: CGAffineTransform(
+        scaleX: sx,
+        y: sy
+      )
+    )
+  }
+
+  maskImage = maskImage.cropped(
+    to: CGRect(
+      x: 0,
+      y: 0,
+      width: width,
+      height: height
+    )
+  )
+
+  context.render(
+    maskImage,
+    to: maskBuffer,
+    bounds: CGRect(
+      x: 0,
+      y: 0,
+      width: width,
+      height: height
+    ),
+    colorSpace: CGColorSpaceCreateDeviceGray()
+  )
+
+  CVPixelBufferLockBaseAddress(
+    maskBuffer,
+    []
+  )
+
+  defer {
+    CVPixelBufferUnlockBaseAddress(
+      maskBuffer,
+      []
+    )
+  }
+
+  guard
+    let address =
+      CVPixelBufferGetBaseAddress(maskBuffer)
+  else {
+    throw BackgroundRemovalError.maskCreationFailed
+  }
+
+  let bytesPerRow =
+    CVPixelBufferGetBytesPerRow(maskBuffer)
+
+  let base =
+    address.assumingMemoryBound(
+      to: UInt8.self
+    )
+
+  /*
+   * Vision now controls ONLY the outer edge.
+   *
+   * Once a scanline enters the detected product and exits it,
+   * every pixel between those boundaries is guaranteed foreground.
+   *
+   * This is what preserves:
+   * - logos
+   * - thin lettering
+   * - fine bottom copy
+   * - highlights
+   * - dark artwork on dark packaging
+   */
+  let threshold: UInt8 = 24
+
+  for y in 0..<height {
+    let row =
+      base.advanced(
+        by: y * bytesPerRow
+      )
+
+    var left = -1
+    var right = -1
+
+    for x in 0..<width {
+      if row[x] >= threshold {
+        left = x
+        break
+      }
+    }
+
+    guard left >= 0 else {
+      continue
+    }
+
+    for x in stride(
+      from: width - 1,
+      through: 0,
+      by: -1
+    ) {
+      if row[x] >= threshold {
+        right = x
+        break
+      }
+    }
+
+    guard right >= left else {
+      continue
+    }
+
+    /*
+     * Preserve a 1 px soft boundary.
+     * Everything inside becomes fully opaque.
+     */
+    if right - left > 2 {
+      for x in (left + 1)..<right {
+        row[x] = 255
+      }
+    }
+  }
+
+  return maskBuffer
+}
+
+func erodeMaskOnePixel(_ pixelBuffer: CVPixelBuffer) throws {
+  CVPixelBufferLockBaseAddress(pixelBuffer, [])
+
+  defer {
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
+  }
+
+  guard
+    let address = CVPixelBufferGetBaseAddress(pixelBuffer)
+  else {
+    throw BackgroundRemovalError.maskCreationFailed
+  }
+
+  let width = CVPixelBufferGetWidth(pixelBuffer)
+  let height = CVPixelBufferGetHeight(pixelBuffer)
+  let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+
+  let base = address.assumingMemoryBound(to: UInt8.self)
+
+  var copy = [UInt8](repeating: 0, count: width * height)
+
+  for y in 0..<height {
+    let row = base.advanced(by: y * bytesPerRow)
+
+    for x in 0..<width {
+      copy[y * width + x] = row[x]
+    }
+  }
+
+  /*
+   * True 3x3 minimum filter:
+   * shrink the foreground by exactly ~1 pixel.
+   *
+   * This removes the white fringe from source-background
+   * contamination without touching the solid product interior.
+   */
+  for y in 0..<height {
+    let row = base.advanced(by: y * bytesPerRow)
+
+    for x in 0..<width {
+      var minimum: UInt8 = 255
+
+      for dy in -1...1 {
+        for dx in -1...1 {
+          let sx = x + dx
+          let sy = y + dy
+
+          if sx < 0 || sx >= width || sy < 0 || sy >= height {
+            minimum = 0
+            continue
+          }
+
+          minimum = min(
+            minimum,
+            copy[sy * width + sx]
+          )
+        }
+      }
+
+      row[x] = minimum
+    }
+  }
+}
+
+func removeBackground(
+  inputURL: URL,
+  outputURL: URL
+) throws {
+  guard
+    let sourceImage = CIImage(
+      contentsOf: inputURL,
+      options: [
+        .applyOrientationProperty: true
+      ]
+    )
+  else {
+    throw BackgroundRemovalError.sourceImageFailed
+  }
+
+  let handler =
+    VNImageRequestHandler(
+      url: inputURL
+    )
+
+  let request =
+    VNGenerateForegroundInstanceMaskRequest()
+
+  try handler.perform([request])
+
+  guard
+    let observation =
+      request.results?.first,
+    !observation.allInstances.isEmpty
+  else {
+    throw BackgroundRemovalError.noForeground
+  }
+
+  let visionMask =
+    try observation.generateScaledMaskForImage(
+      forInstances:
+        observation.allInstances,
+      from: handler
+    )
+
+  let width =
+    Int(sourceImage.extent.width)
+
+  let height =
+    Int(sourceImage.extent.height)
+
+  let context = CIContext(
+    options: [
+      .useSoftwareRenderer: false
+    ]
+  )
+
+  let solidMask =
+    try makeSolidProductMask(
+      visionMask: visionMask,
+      width: width,
+      height: height,
+      context: context
+    )
+
+  // Three deterministic edge-cleanup passes.
+  // This is the sharpest clean baseline.
+  try erodeMaskOnePixel(solidMask)
+  try erodeMaskOnePixel(solidMask)
+  try erodeMaskOnePixel(solidMask)
+
+  let maskImage =
+    CIImage(
+      cvPixelBuffer: solidMask
+    )
+    .cropped(
+      to: sourceImage.extent
+    )
+
+  let transparent =
+    CIImage(
+      color: CIColor(
+        red: 0,
+        green: 0,
+        blue: 0,
+        alpha: 0
+      )
+    )
+    .cropped(
+      to: sourceImage.extent
+    )
+
+  /*
+   * IMPORTANT:
+   *
+   * RGB comes directly from the ORIGINAL uploaded image.
+   *
+   * The mask affects alpha only.
+   * No reconstruction.
+   * No resampling of package artwork.
+   * No Vision-generated RGB.
+   */
+  let outputImage =
+    sourceImage.applyingFilter(
+      "CIBlendWithMask",
+      parameters: [
+        kCIInputBackgroundImageKey:
+          transparent,
+        kCIInputMaskImageKey:
+          maskImage
+      ]
+    )
+
+  let colorSpace =
+    CGColorSpace(
+      name: CGColorSpace.sRGB
+    )!
+
+  guard
+    let png =
+      context.pngRepresentation(
+        of: outputImage,
+        format: .RGBA8,
+        colorSpace: colorSpace
+      )
+  else {
+    throw BackgroundRemovalError.pngEncodingFailed
+  }
+
+  try png.write(
+    to: outputURL,
+    options: .atomic
+  )
+}
+
+do {
+  guard
+    CommandLine.arguments.count == 3
+  else {
+    throw BackgroundRemovalError.invalidArguments
+  }
+
+  try removeBackground(
+    inputURL: URL(
+      fileURLWithPath:
+        CommandLine.arguments[1]
+    ),
+    outputURL: URL(
+      fileURLWithPath:
+        CommandLine.arguments[2]
+    )
+  )
+} catch {
+  FileHandle.standardError.write(
+    Data(
+      "\(error.localizedDescription)\n".utf8
+    )
+  )
+
+  exit(1)
+}
