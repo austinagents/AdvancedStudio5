@@ -25,6 +25,15 @@ import {GeometryTemplate24} from "../../src/GeometryTemplate24";
 import {GeometryTemplate25} from "../../src/GeometryTemplate25";
 import {GeometryTemplate26} from "../../src/GeometryTemplate26";
 import {GeometryTemplate29} from "../../src/GeometryTemplate29";
+import {GeometryTemplate23} from "../../src/GeometryTemplate23";
+import {GeometryTemplate27} from "../../src/GeometryTemplate27";
+import {GeometryTemplate28} from "../../src/GeometryTemplate28";
+import {GeometryTemplate30} from "../../src/GeometryTemplate30";
+import {GeometryTemplate31} from "../../src/GeometryTemplate31";
+import {GeometryTemplate33} from "../../src/GeometryTemplate33";
+import {GeometryTemplate34} from "../../src/GeometryTemplate34";
+import {GeometryTemplate35} from "../../src/GeometryTemplate35";
+import {GeometryTemplate36} from "../../src/GeometryTemplate36";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -253,6 +262,69 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     name: "Accordion Fold",
     subtitle: "Zig-Zag Surface",
     component: GeometryTemplate29,
+  },
+  {
+    id: "voronoi-fracture",
+    number: "23",
+    name: "Voronoi Fracture",
+    subtitle: "Product Cells",
+    component: GeometryTemplate23,
+  },
+  {
+    id: "contour-growth",
+    number: "27",
+    name: "Contour Growth",
+    subtitle: "Silhouette Propagation",
+    component: GeometryTemplate27,
+  },
+  {
+    id: "pixel-point-cloud",
+    number: "28 (TEST)",
+    name: "Pixel Point Cloud",
+    subtitle: "Product Pixels",
+    component: GeometryTemplate28,
+  },
+  {
+    id: "adaptive-triangulation",
+    number: "30",
+    name: "Adaptive Triangulation",
+    subtitle: "Topology Fragments",
+    component: GeometryTemplate30,
+  },
+  {
+    id: "relief-map",
+    number: "31",
+    name: "Relief Map",
+    subtitle: "Luminance Depth",
+    component: GeometryTemplate31,
+  },
+  {
+    id: "edge-particle-growth",
+    number: "33 (TEST)",
+    name: "Edge Particle Growth",
+    subtitle: "Perimeter Geometry",
+    component: GeometryTemplate33,
+  },
+  {
+    id: "image-cell-mosaic",
+    number: "34",
+    name: "Image Cell Mosaic",
+    subtitle: "Image Regions",
+    component: GeometryTemplate34,
+  },
+  {
+    id: "topology-wavefront",
+    number: "35",
+    name: "Topology Wavefront",
+    subtitle: "Edge Distance Field",
+    component: GeometryTemplate35,
+  },
+  {
+    id: "topology-voxel-reconstruction",
+    number: "36 (TEST)",
+    name: "Topology Voxel Reconstruction",
+    subtitle: "Product-Derived Voxels",
+    component: GeometryTemplate36,
   },
 ];
 
