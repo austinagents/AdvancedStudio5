@@ -55,6 +55,7 @@ import {GeometryTemplate54} from "../../src/GeometryTemplate54";
 import {GeometryTemplate55} from "../../src/GeometryTemplate55";
 import {GeometryTemplate56} from "../../src/GeometryTemplate56";
 import {GeometryTemplate57} from "../../src/GeometryTemplate57";
+import {GeometryTemplate58} from "../../src/GeometryTemplate58";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -494,6 +495,13 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     name: "Beveled Volume Field",
     subtitle: "Product-Driven Volume",
     component: GeometryTemplate57,
+  },
+  {
+    id: "skyscraper-billboard",
+    number: "58",
+    name: "Skyscraper Billboard",
+    subtitle: "Vertical Billboard Environment",
+    component: GeometryTemplate58,
   },
 
 
