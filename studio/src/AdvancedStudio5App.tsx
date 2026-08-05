@@ -44,6 +44,16 @@ import {GeometryTemplate43} from "../../src/GeometryTemplate43";
 import {GeometryTemplate44} from "../../src/GeometryTemplate44";
 import {GeometryTemplate45} from "../../src/GeometryTemplate45";
 import {GeometryTemplate46} from "../../src/GeometryTemplate46";
+import {GeometryTemplate47} from "../../src/GeometryTemplate47";
+import {GeometryTemplate48} from "../../src/GeometryTemplate48";
+import {GeometryTemplate49} from "../../src/GeometryTemplate49";
+import {GeometryTemplate50} from "../../src/GeometryTemplate50";
+import {GeometryTemplate51} from "../../src/GeometryTemplate51";
+import {GeometryTemplate52} from "../../src/GeometryTemplate52";
+import {GeometryTemplate53} from "../../src/GeometryTemplate53";
+import {GeometryTemplate54} from "../../src/GeometryTemplate54";
+import {GeometryTemplate55} from "../../src/GeometryTemplate55";
+import {GeometryTemplate56} from "../../src/GeometryTemplate56";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -405,6 +415,77 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     name: "Feature Torque",
     subtitle: "Contrast Driven",
     component: GeometryTemplate46,
+  },
+
+  {
+    id: "contour-shells",
+    number: "47",
+    name: "Contour Shells",
+    subtitle: "Multi-Stage Silhouette",
+    component: GeometryTemplate47,
+  },
+  {
+    id: "feature-isolation",
+    number: "48",
+    name: "Feature Isolation",
+    subtitle: "Artwork Driven",
+    component: GeometryTemplate48,
+  },
+  {
+    id: "color-layer-stack",
+    number: "49",
+    name: "Color Layer Stack",
+    subtitle: "Chromatic Regions",
+    component: GeometryTemplate49,
+  },
+  {
+    id: "medial-skeleton",
+    number: "50",
+    name: "Medial Skeleton",
+    subtitle: "Structural Core",
+    component: GeometryTemplate50,
+  },
+  {
+    id: "surface-compression",
+    number: "51",
+    name: "Surface Compression",
+    subtitle: "Contrast Relief",
+    component: GeometryTemplate51,
+  },
+  {
+    id: "contour-ribbons",
+    number: "52",
+    name: "Contour Ribbons",
+    subtitle: "Extracted Topology",
+    component: GeometryTemplate52,
+  },
+  {
+    id: "feature-wave",
+    number: "53",
+    name: "Feature Wave",
+    subtitle: "Gradient Propagation",
+    component: GeometryTemplate53,
+  },
+  {
+    id: "chromatic-volume",
+    number: "54",
+    name: "Chromatic Volume",
+    subtitle: "RGB Spatial Layers",
+    component: GeometryTemplate54,
+  },
+  {
+    id: "topology-crumple",
+    number: "55",
+    name: "Topology Crumple",
+    subtitle: "Feature Creases",
+    component: GeometryTemplate55,
+  },
+  {
+    id: "field-fusion",
+    number: "56",
+    name: "Product Field Fusion",
+    subtitle: "Multi-Field System",
+    component: GeometryTemplate56,
   },
 
 ];
