@@ -1782,7 +1782,7 @@ const BeveledVolumeScene:
            * Every product cell physically transitions from
            * a displaced 3D quad into its exact final position.
            *
-           * At 6 seconds:
+           * At 10 seconds:
            *
            * - displacement = 0
            * - rotation = 0
@@ -1810,14 +1810,14 @@ const BeveledVolumeScene:
 
               /*
                * Surface begins physically emerging around
-               * 3.8 seconds and reaches exact assembly at 6.0.
+               * 7.8 seconds and reaches exact assembly at 10.0.
                */
               const emerge =
                 smooth01(
                   clamp01(
                     (
                       seconds -
-                      3.8
+                      7.8
                     ) /
                       0.8,
                   ),
@@ -1828,7 +1828,7 @@ const BeveledVolumeScene:
                   clamp01(
                     (
                       seconds -
-                      4.45
+                      8.45
                     ) /
                       1.55,
                   ),

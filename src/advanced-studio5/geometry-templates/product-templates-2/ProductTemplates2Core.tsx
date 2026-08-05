@@ -32,10 +32,10 @@ export type {
 };
 
 export const PT2_TOTAL_SECONDS =
-  8;
+  12;
 
 export const PT2_GEOMETRY_SECONDS =
-  6;
+  10;
 
 export const PT2_HOLD_SECONDS =
   2;
@@ -176,8 +176,8 @@ export const getPT2Timing = (
       interpolate(
         seconds,
         [
-          4.8,
-          6,
+          8,
+          10,
         ],
         [
           0,

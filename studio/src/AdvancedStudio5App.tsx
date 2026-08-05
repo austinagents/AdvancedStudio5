@@ -582,9 +582,9 @@ export const AdvancedStudio5App: React.FC = () => {
   /*
    * Product Templates 2 timing:
    *
-   * 57–66 = 8 seconds total
-   * 0–6s = geometry behavior
-   * 6–8s = exact product hold
+   * 57–66 = 12 seconds total
+   * 0–10s = geometry behavior
+   * 10–12s = final hold
    *
    * Existing templates remain 6 seconds.
    */
@@ -600,7 +600,7 @@ export const AdvancedStudio5App: React.FC = () => {
 
   const geometryDurationInFrames =
     isProductTemplates2
-      ? 30 * 8
+      ? 30 * 12
       : 30 * 6;
 
   const format = productVideoFormats[project.formatId];
