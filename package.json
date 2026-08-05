@@ -1,0 +1,44 @@
+{
+  "name": "advancedstudio5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "studio": "vite --config vite.studio.config.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/austinagents/AdvancedStudio5.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/austinagents/AdvancedStudio5/issues"
+  },
+  "homepage": "https://github.com/austinagents/AdvancedStudio5#readme",
+  "dependencies": {
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.2.0",
+    "@remotion/cli": "^4.0.489",
+    "@remotion/media": "^4.0.489",
+    "@remotion/player": "^4.0.489",
+    "@remotion/three": "^4.0.489",
+    "@vitejs/plugin-react": "^6.0.3",
+    "lucide-react": "^1.24.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "remotion": "^4.0.489",
+    "three": "^0.185.1",
+    "vite": "^8.1.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.180.0",
+    "typescript": "^5.9.3"
+  }
+}

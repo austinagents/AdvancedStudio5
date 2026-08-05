@@ -1,0 +1,113 @@
+{
+  "title": "MARKETING STRATEGY",
+  "subtitle": "A data-driven approach to sustainable growth",
+  "blocks": [
+    {
+      "id": "budget",
+      "type": "metric",
+      "title": "ANNUAL BUDGET",
+      "x": 35,
+      "y": 122,
+      "width": 190,
+      "height": 180,
+      "designPreset": "hero"
+    },
+    {
+      "id": "allocation",
+      "type": "donut",
+      "title": "BUDGET ALLOCATION",
+      "x": 240,
+      "y": 122,
+      "width": 470,
+      "height": 180,
+      "designPreset": "data"
+    },
+    {
+      "id": "objective",
+      "type": "objective",
+      "title": "KEY OBJECTIVE",
+      "x": 725,
+      "y": 122,
+      "width": 240,
+      "height": 180,
+      "designPreset": "supporting"
+    },
+    {
+      "id": "campaign",
+      "type": "timeline",
+      "title": "CAMPAIGN TIMELINE",
+      "x": 35,
+      "y": 318,
+      "width": 930,
+      "height": 145,
+      "designPreset": "process"
+    },
+    {
+      "id": "journey",
+      "type": "funnel",
+      "title": "CUSTOMER JOURNEY",
+      "x": 35,
+      "y": 479,
+      "width": 280,
+      "height": 125,
+      "designPreset": "supporting"
+    },
+    {
+      "id": "performance",
+      "type": "bars",
+      "title": "CHANNEL PERFORMANCE",
+      "x": 330,
+      "y": 479,
+      "width": 340,
+      "height": 125,
+      "designPreset": "data"
+    },
+    {
+      "id": "metrics",
+      "type": "metrics",
+      "title": "KEY METRICS",
+      "x": 685,
+      "y": 479,
+      "width": 280,
+      "height": 125,
+      "designPreset": "summary"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-1",
+      "blockId": "budget",
+      "title": "Research & Budget",
+      "animation": "focus",
+      "durationSeconds": 4
+    },
+    {
+      "id": "scene-2",
+      "blockId": "journey",
+      "title": "Funnel Journey",
+      "animation": "reveal",
+      "durationSeconds": 4.5
+    },
+    {
+      "id": "scene-3",
+      "blockId": "performance",
+      "title": "Channel Metrics",
+      "animation": "build",
+      "durationSeconds": 4
+    },
+    {
+      "id": "scene-4",
+      "blockId": "objective",
+      "title": "Key Objective",
+      "animation": "spotlight",
+      "durationSeconds": 3.5
+    },
+    {
+      "id": "scene-5",
+      "blockId": null,
+      "title": "Full Overview",
+      "animation": "overview",
+      "durationSeconds": 4
+    }
+  ]
+}
