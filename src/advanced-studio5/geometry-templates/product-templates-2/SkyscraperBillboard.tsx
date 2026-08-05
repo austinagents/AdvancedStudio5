@@ -25,7 +25,7 @@ export const SkyscraperBillboard:
     const progress =
       interpolate(
         seconds,
-        [0, 12],
+        [0, 18],
         [0, 1],
         {
           extrapolateLeft: "clamp",

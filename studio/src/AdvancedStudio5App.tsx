@@ -607,9 +607,11 @@ export const AdvancedStudio5App: React.FC = () => {
     geometryTemplateNumber <= 66;
 
   const geometryDurationInFrames =
-    isProductTemplates2
-      ? 30 * 12
-      : 30 * 6;
+    geometryTemplateNumber === 58
+      ? 30 * 18
+      : isProductTemplates2
+        ? 30 * 12
+        : 30 * 6;
 
   const format = productVideoFormats[project.formatId];
   const selectedTemplate =
