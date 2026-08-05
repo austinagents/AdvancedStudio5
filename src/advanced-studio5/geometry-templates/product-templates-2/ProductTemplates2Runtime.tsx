@@ -228,17 +228,21 @@ export const PT2Canvas:
     ) => React.ReactNode;
     width: number;
     height: number;
+    transparentBackground?: boolean;
   }> = ({
     imageSrc,
     children,
     width,
     height,
+    transparentBackground = false,
   }) => {
     return (
       <AbsoluteFill
         style={{
           background:
-            "radial-gradient(circle at 50% 44%, #182131 0%, #090b10 48%, #030405 100%)",
+            transparentBackground
+              ? "transparent"
+              : "radial-gradient(circle at 50% 44%, #182131 0%, #090b10 48%, #030405 100%)",
           overflow:
             "hidden",
         }}
