@@ -66,6 +66,16 @@ import {GeometryTemplate65} from "../../src/GeometryTemplate65";
 import {GeometryTemplate66} from "../../src/GeometryTemplate66";
 import {GeometryTemplate67} from "../../src/GeometryTemplate67";
 import {GeometryTemplate68} from "../../src/GeometryTemplate68";
+import {GeometryTemplate69} from "../../src/GeometryTemplate69";
+import {GeometryTemplate70} from "../../src/GeometryTemplate70";
+import {GeometryTemplate71} from "../../src/GeometryTemplate71";
+import {GeometryTemplate72} from "../../src/GeometryTemplate72";
+import {GeometryTemplate73} from "../../src/GeometryTemplate73";
+import {GeometryTemplate74} from "../../src/GeometryTemplate74";
+import {GeometryTemplate75} from "../../src/GeometryTemplate75";
+import {GeometryTemplate76} from "../../src/GeometryTemplate76";
+import {GeometryTemplate77} from "../../src/GeometryTemplate77";
+import {GeometryTemplate78} from "../../src/GeometryTemplate78";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -585,6 +595,76 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     subtitle: "Product Tube Helices",
     component: GeometryTemplate68,
   },
+  {
+    id: "icosphere-pressure-body",
+    number: "69",
+    name: "Icosphere Pressure Body",
+    subtitle: "Packed Sphere Volume",
+    component: GeometryTemplate69,
+  },
+  {
+    id: "accordion-pleat-surface",
+    number: "70",
+    name: "Accordion Pleat Surface",
+    subtitle: "Continuous Fold Geometry",
+    component: GeometryTemplate70,
+  },
+  {
+    id: "tensegrity-product-cage",
+    number: "71",
+    name: "Tensegrity Product Cage",
+    subtitle: "Strut + Cable Structure",
+    component: GeometryTemplate71,
+  },
+  {
+    id: "implicit-metaball-body",
+    number: "72",
+    name: "Implicit Metaball Body",
+    subtitle: "Marching Cubes Surface",
+    component: GeometryTemplate72,
+  },
+  {
+    id: "lamella-fan-field",
+    number: "73",
+    name: "Lamella Fan Field",
+    subtitle: "Kinetic Product Fins",
+    component: GeometryTemplate73,
+  },
+  {
+    id: "rotational-lathe-body",
+    number: "74",
+    name: "Rotational Lathe Body",
+    subtitle: "Revolved Product Profile",
+    component: GeometryTemplate74,
+  },
+  {
+    id: "chainmail-ring-field",
+    number: "75",
+    name: "Chainmail Ring Field",
+    subtitle: "Interlocking Product Rings",
+    component: GeometryTemplate75,
+  },
+  {
+    id: "deformation-lattice-body",
+    number: "76",
+    name: "Deformation Lattice Body",
+    subtitle: "Twisting Control Cage",
+    component: GeometryTemplate76,
+  },
+  {
+    id: "polyhedral-granular-body",
+    number: "77",
+    name: "Polyhedral Granular Body",
+    subtitle: "Mixed Product Grains",
+    component: GeometryTemplate77,
+  },
+  {
+    id: "superformula-petal-volume",
+    number: "78",
+    name: "Superformula Petal Volume",
+    subtitle: "Parametric Product Lobes",
+    component: GeometryTemplate78,
+  },
 
 
 ];
@@ -685,7 +765,7 @@ export const AdvancedStudio5App: React.FC = () => {
 
   const isProductTemplates2 =
     geometryTemplateNumber >= 57 &&
-    geometryTemplateNumber <= 68;
+    geometryTemplateNumber <= 78;
 
   const geometryDurationInFrames =
     geometryTemplateNumber === 58
