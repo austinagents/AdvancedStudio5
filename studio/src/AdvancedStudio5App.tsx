@@ -56,6 +56,16 @@ import {GeometryTemplate55} from "../../src/GeometryTemplate55";
 import {GeometryTemplate56} from "../../src/GeometryTemplate56";
 import {GeometryTemplate57} from "../../src/GeometryTemplate57";
 import {GeometryTemplate58} from "../../src/GeometryTemplate58";
+import {GeometryTemplate59} from "../../src/GeometryTemplate59";
+import {GeometryTemplate60} from "../../src/GeometryTemplate60";
+import {GeometryTemplate61} from "../../src/GeometryTemplate61";
+import {GeometryTemplate62} from "../../src/GeometryTemplate62";
+import {GeometryTemplate63} from "../../src/GeometryTemplate63";
+import {GeometryTemplate64} from "../../src/GeometryTemplate64";
+import {GeometryTemplate65} from "../../src/GeometryTemplate65";
+import {GeometryTemplate66} from "../../src/GeometryTemplate66";
+import {GeometryTemplate67} from "../../src/GeometryTemplate67";
+import {GeometryTemplate68} from "../../src/GeometryTemplate68";
 import {Player, type PlayerRef} from "@remotion/player";
 import {
   Check,
@@ -505,6 +515,77 @@ const geometryTemplates: GeometryTemplateEntry[] = [
   },
 
 
+  {
+    id: "hexagonal-volume-field",
+    number: "59",
+    name: "Hexagonal Volume Field",
+    subtitle: "Hex Prism Volume",
+    component: GeometryTemplate59,
+  },
+  {
+    id: "dual-mesh-cells",
+    number: "60",
+    name: "Dual Mesh Cells",
+    subtitle: "Extruded Dual Topology",
+    component: GeometryTemplate60,
+  },
+  {
+    id: "geodesic-fiber-body",
+    number: "61",
+    name: "Geodesic Fiber Body",
+    subtitle: "Structural Product Network",
+    component: GeometryTemplate61,
+  },
+  {
+    id: "inset-pyramid-field",
+    number: "62",
+    name: "Inset Pyramid Field",
+    subtitle: "Product Frustum Field",
+    component: GeometryTemplate62,
+  },
+  {
+    id: "voronoi-depth-crystal",
+    number: "63",
+    name: "Voronoi Depth Crystal",
+    subtitle: "Extruded Crystal Cells",
+    component: GeometryTemplate63,
+  },
+  {
+    id: "contour-rib-architecture",
+    number: "64",
+    name: "Contour Rib Architecture",
+    subtitle: "Silhouette Rib Volume",
+    component: GeometryTemplate64,
+  },
+  {
+    id: "radial-pin-sculpture",
+    number: "65",
+    name: "Radial Pin Sculpture",
+    subtitle: "Attractor Pin Field",
+    component: GeometryTemplate65,
+  },
+  {
+    id: "boolean-slice-volume",
+    number: "66",
+    name: "Boolean Slice Volume",
+    subtitle: "Spatial Volume Cuts",
+    component: GeometryTemplate66,
+  },
+  {
+    id: "voxel-octree-body",
+    number: "67",
+    name: "Voxel Octree Body",
+    subtitle: "Adaptive Spatial Voxels",
+    component: GeometryTemplate67,
+  },
+  {
+    id: "helical-strand-volume",
+    number: "68",
+    name: "Helical Strand Volume",
+    subtitle: "Product Tube Helices",
+    component: GeometryTemplate68,
+  },
+
 
 ];
 
@@ -604,7 +685,7 @@ export const AdvancedStudio5App: React.FC = () => {
 
   const isProductTemplates2 =
     geometryTemplateNumber >= 57 &&
-    geometryTemplateNumber <= 66;
+    geometryTemplateNumber <= 68;
 
   const geometryDurationInFrames =
     geometryTemplateNumber === 58
