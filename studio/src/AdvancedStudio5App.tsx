@@ -1118,7 +1118,7 @@ export const AdvancedStudio5App: React.FC = () => {
 
                   imageSrc: project.imageSrc,
 
-                  backgroundVideoSrc: backgroundVideoSrc || undefined,
+                  useBackgroundVideo: Boolean(backgroundVideoSrc),
 
                   formatId: project.formatId,
                 }

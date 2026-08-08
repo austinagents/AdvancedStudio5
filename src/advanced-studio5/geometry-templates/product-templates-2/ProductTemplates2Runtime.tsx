@@ -1,21 +1,12 @@
-import React, {
-  Suspense,
-  useMemo,
-} from "react";
+import React, { Suspense, useMemo } from "react";
 
-import {
-  ThreeCanvas,
-} from "@remotion/three";
+import { ThreeCanvas } from "@remotion/three";
 
-import {
-  useTexture,
-} from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 
 import * as THREE from "three";
 
-import {
-  AbsoluteFill,
-} from "remotion";
+import { AbsoluteFill, OffthreadVideo } from "remotion";
 
 import {
   analyzeProduct,
@@ -24,9 +15,7 @@ import {
   type ProductAnalysis,
 } from "../ProductGeometryCore";
 
-import {
-  createPT2ExactProductMaterial,
-} from "./ProductTemplates2Core";
+import { createPT2ExactProductMaterial } from "./ProductTemplates2Core";
 
 export type PT2LoadedProduct = {
   texture: THREE.Texture;
@@ -34,259 +23,161 @@ export type PT2LoadedProduct = {
   product: ProductAnalysis;
 };
 
-export const PT2Product:
-  React.FC<{
-    imageSrc: string;
-    children: (
-      loaded: PT2LoadedProduct,
-    ) => React.ReactNode;
-  }> = ({
-    imageSrc,
-    children,
-  }) => {
-    const texture =
-      useTexture(
-        imageSrc,
-      );
+const PT2BackgroundVideoContext = React.createContext<string | undefined>(
+  undefined,
+);
 
-    configureProductTexture(
-      texture,
-    );
+export const PT2BackgroundProvider: React.FC<{
+  backgroundVideoSrc?: string;
+  children: React.ReactNode;
+}> = ({ backgroundVideoSrc, children }) => {
+  return (
+    <PT2BackgroundVideoContext.Provider value={backgroundVideoSrc}>
+      {children}
+    </PT2BackgroundVideoContext.Provider>
+  );
+};
 
-    const image =
-      texture.image as
-        HTMLImageElement;
+export const PT2Product: React.FC<{
+  imageSrc: string;
+  children: (loaded: PT2LoadedProduct) => React.ReactNode;
+}> = ({ imageSrc, children }) => {
+  const texture = useTexture(imageSrc);
 
-    const product =
-      useMemo(
-        () =>
-          analyzeProduct(
-            image,
-          ),
-        [
-          image,
-        ],
-      );
+  configureProductTexture(texture);
 
-    return (
-      <>
-        {children({
-          texture,
-          image,
-          product,
-        })}
-      </>
-    );
-  };
+  const image = texture.image as HTMLImageElement;
 
-export const PT2ExactProduct:
-  React.FC<{
-    texture: THREE.Texture;
-    product: ProductAnalysis;
-  }> = ({
-    texture,
-    product,
-  }) => {
-    const material =
-      useMemo(
-        () =>
-          createPT2ExactProductMaterial(
-            texture,
-          ),
-        [
-          texture,
-        ],
-      );
+  const product = useMemo(() => analyzeProduct(image), [image]);
 
-    return (
-      <mesh
-        position={[
-          product.offsetX,
-          product.offsetY,
-          0.012,
-        ]}
-        material={
-          material
-        }
-      >
-        <planeGeometry
-          args={[
-            product.planeWidth,
-            product.planeHeight,
-          ]}
+  return (
+    <>
+      {children({
+        texture,
+        image,
+        product,
+      })}
+    </>
+  );
+};
+
+export const PT2ExactProduct: React.FC<{
+  texture: THREE.Texture;
+  product: ProductAnalysis;
+}> = ({ texture, product }) => {
+  const material = useMemo(
+    () => createPT2ExactProductMaterial(texture),
+    [texture],
+  );
+
+  return (
+    <mesh
+      position={[product.offsetX, product.offsetY, 0.012]}
+      material={material}
+    >
+      <planeGeometry args={[product.planeWidth, product.planeHeight]} />
+    </mesh>
+  );
+};
+
+export const PT2TexturedPanel: React.FC<{
+  texture: THREE.Texture;
+  product: ProductAnalysis;
+  u0: number;
+  u1: number;
+  v0: number;
+  v1: number;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  scale?: [number, number, number];
+}> = ({
+  texture,
+  product,
+  u0,
+  u1,
+  v0,
+  v1,
+  position = [product.offsetX, product.offsetY, 0],
+  rotation = [0, 0, 0],
+  scale = [1, 1, 1],
+}) => {
+  const geometry = useMemo(
+    () => createProductPanelGeometry(product, u0, u1, v0, v1),
+    [product, u0, u1, v0, v1],
+  );
+
+  const material = useMemo(
+    () => createPT2ExactProductMaterial(texture),
+    [texture],
+  );
+
+  return (
+    <mesh
+      geometry={geometry}
+      material={material}
+      position={position}
+      rotation={rotation}
+      scale={scale}
+      frustumCulled={false}
+    />
+  );
+};
+
+export const PT2Canvas: React.FC<{
+  imageSrc?: string;
+  children: (loaded: PT2LoadedProduct) => React.ReactNode;
+  width: number;
+  height: number;
+  transparentBackground?: boolean;
+}> = ({ imageSrc, children, width, height, transparentBackground = false }) => {
+  const backgroundVideoSrc = React.useContext(PT2BackgroundVideoContext);
+
+  const hasBackgroundVideo = Boolean(backgroundVideoSrc);
+
+  return (
+    <AbsoluteFill
+      style={{
+        background:
+          hasBackgroundVideo || transparentBackground
+            ? "transparent"
+            : "radial-gradient(circle at 50% 44%, #182131 0%, #090b10 48%, #030405 100%)",
+        overflow: "hidden",
+      }}
+    >
+      {backgroundVideoSrc ? (
+        <OffthreadVideo
+          src={backgroundVideoSrc}
+          muted
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
         />
-      </mesh>
-    );
-  };
+      ) : null}
 
-export const PT2TexturedPanel:
-  React.FC<{
-    texture: THREE.Texture;
-    product: ProductAnalysis;
-    u0: number;
-    u1: number;
-    v0: number;
-    v1: number;
-    position?: [
-      number,
-      number,
-      number,
-    ];
-    rotation?: [
-      number,
-      number,
-      number,
-    ];
-    scale?: [
-      number,
-      number,
-      number,
-    ];
-  }> = ({
-    texture,
-    product,
-    u0,
-    u1,
-    v0,
-    v1,
-    position = [
-      product.offsetX,
-      product.offsetY,
-      0,
-    ],
-    rotation = [
-      0,
-      0,
-      0,
-    ],
-    scale = [
-      1,
-      1,
-      1,
-    ],
-  }) => {
-    const geometry =
-      useMemo(
-        () =>
-          createProductPanelGeometry(
-            product,
-            u0,
-            u1,
-            v0,
-            v1,
-          ),
-        [
-          product,
-          u0,
-          u1,
-          v0,
-          v1,
-        ],
-      );
-
-    const material =
-      useMemo(
-        () =>
-          createPT2ExactProductMaterial(
-            texture,
-          ),
-        [
-          texture,
-        ],
-      );
-
-    return (
-      <mesh
-        geometry={
-          geometry
-        }
-        material={
-          material
-        }
-        position={
-          position
-        }
-        rotation={
-          rotation
-        }
-        scale={
-          scale
-        }
-        frustumCulled={
-          false
-        }
-      />
-    );
-  };
-
-export const PT2Canvas:
-  React.FC<{
-    imageSrc?: string;
-    children: (
-      loaded:
-        PT2LoadedProduct,
-    ) => React.ReactNode;
-    width: number;
-    height: number;
-    transparentBackground?: boolean;
-  }> = ({
-    imageSrc,
-    children,
-    width,
-    height,
-    transparentBackground = false,
-  }) => {
-    return (
-      <AbsoluteFill
+      <ThreeCanvas
+        width={width}
+        height={height}
+        camera={{
+          position: [0, 0, 9],
+          fov: 38,
+          near: 0.1,
+          far: 100,
+        }}
         style={{
-          background:
-            transparentBackground
-              ? "transparent"
-              : "radial-gradient(circle at 50% 44%, #182131 0%, #090b10 48%, #030405 100%)",
-          overflow:
-            "hidden",
+          width: "100%",
+          height: "100%",
         }}
       >
-        <ThreeCanvas
-          width={
-            width
-          }
-          height={
-            height
-          }
-          camera={{
-            position: [
-              0,
-              0,
-              9,
-            ],
-            fov: 38,
-            near: 0.1,
-            far: 100,
-          }}
-          style={{
-            width:
-              "100%",
-            height:
-              "100%",
-          }}
-        >
-          {imageSrc ? (
-            <Suspense
-              fallback={
-                null
-              }
-            >
-              <PT2Product
-                imageSrc={
-                  imageSrc
-                }
-              >
-                {children}
-              </PT2Product>
-            </Suspense>
-          ) : null}
-        </ThreeCanvas>
-      </AbsoluteFill>
-    );
-  };
+        {imageSrc ? (
+          <Suspense fallback={null}>
+            <PT2Product imageSrc={imageSrc}>{children}</PT2Product>
+          </Suspense>
+        ) : null}
+      </ThreeCanvas>
+    </AbsoluteFill>
+  );
+};

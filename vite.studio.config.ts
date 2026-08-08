@@ -707,103 +707,56 @@ const studioApi = (): Plugin => ({
       }
 
       if (
-        request.url ===
-          "/api/advanced-studio5/background-video" &&
-        request.method ===
-          "POST"
+        request.url === "/api/advanced-studio5/background-video" &&
+        request.method === "POST"
       ) {
         try {
-          const contentType =
-            request.headers[
-              "content-type"
-            ] ?? "";
+          const contentType = request.headers["content-type"] ?? "";
 
-          if (
-            !contentType.startsWith(
-              "video/mp4",
-            )
-          ) {
-            throw new Error(
-              "Choose an MP4 background video.",
-            );
+          if (!contentType.startsWith("video/mp4")) {
+            throw new Error("Choose an MP4 background video.");
           }
 
-          const video =
-            await readBinaryBody(
-              request,
-              500 *
-                1024 *
-                1024,
-            );
+          const video = await readBinaryBody(request, 500 * 1024 * 1024);
 
-          if (
-            video.length ===
-            0
-          ) {
-            throw new Error(
-              "The uploaded background video is empty.",
-            );
+          if (video.length === 0) {
+            throw new Error("The uploaded background video is empty.");
           }
 
-          const uploadRoot =
-            path.resolve(
-              "studio",
-              "public",
-              "advanced-studio5",
-              "uploads",
-            );
-
-          fs.mkdirSync(
-            uploadRoot,
-            {
-              recursive:
-                true,
-            },
+          const uploadRoot = path.resolve(
+            "studio",
+            "public",
+            "advanced-studio5",
+            "uploads",
           );
 
-          const filePath =
-            path.join(
-              uploadRoot,
-              "background-video.mp4",
-            );
+          fs.mkdirSync(uploadRoot, {
+            recursive: true,
+          });
 
-          fs.writeFileSync(
-            filePath,
-            video,
-          );
+          const filePath = path.join(uploadRoot, "background-video.mp4");
 
-          response.statusCode =
-            200;
+          fs.writeFileSync(filePath, video);
 
-          response.setHeader(
-            "Content-Type",
-            "application/json",
-          );
+          response.statusCode = 200;
+
+          response.setHeader("Content-Type", "application/json");
 
           response.end(
             JSON.stringify({
-              ok:
-                true,
+              ok: true,
 
-              src:
-                "/advanced-studio5/uploads/background-video.mp4",
+              src: "/advanced-studio5/uploads/background-video.mp4",
             }),
           );
-        } catch (
-          error
-        ) {
-          response.statusCode =
-            422;
+        } catch (error) {
+          response.statusCode = 422;
 
-          response.setHeader(
-            "Content-Type",
-            "application/json",
-          );
+          response.setHeader("Content-Type", "application/json");
 
           response.end(
             JSON.stringify({
-              ok:
-                false,
+              ok: false,
 
               error:
                 error instanceof Error
@@ -1082,7 +1035,7 @@ const studioApi = (): Plugin => ({
           const props = JSON.parse(body) as {
             templateNumber?: string;
             imageSrc?: string;
-            backgroundVideoSrc?: string;
+            useBackgroundVideo?: boolean;
             formatId?: string;
           };
 
@@ -1132,11 +1085,7 @@ const studioApi = (): Plugin => ({
               {
                 templateNumber,
                 imageSrc: props.imageSrc,
-                backgroundVideoSrc:
-                  typeof props.backgroundVideoSrc === "string" &&
-                  props.backgroundVideoSrc.length > 0
-                    ? props.backgroundVideoSrc
-                    : undefined,
+                useBackgroundVideo: props.useBackgroundVideo === true,
               },
               null,
               2,
