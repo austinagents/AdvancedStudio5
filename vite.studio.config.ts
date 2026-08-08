@@ -1,10 +1,10 @@
-import {defineConfig, type Plugin} from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import fs from "node:fs";
 import path from "node:path";
-import {spawn} from "node:child_process";
-import {createHash} from "node:crypto";
-import {getAdvancedStudioProjectDuration} from "./src/advanced-studio/scene-contract";
+import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
+import { getAdvancedStudioProjectDuration } from "./src/advanced-studio/scene-contract";
 import {
   getProductTemplate,
   getProductVideoDuration,
@@ -49,7 +49,7 @@ const readBinaryBody = async (
 const runProcess = (
   command: string,
   args: string[],
-): Promise<{code: number | null; stderr: string}> =>
+): Promise<{ code: number | null; stderr: string }> =>
   new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       cwd: process.cwd(),
@@ -60,7 +60,7 @@ const runProcess = (
     child.stderr.on("data", (chunk) => {
       stderr += chunk.toString();
     });
-    child.on("close", (code) => resolve({code, stderr}));
+    child.on("close", (code) => resolve({ code, stderr }));
     child.on("error", reject);
   });
 
@@ -102,7 +102,7 @@ const getPolyHavenCatalog = async (assetType: PolyHavenAssetType) => {
   if (cached) return cached;
   const result = await fetch(
     `https://api.polyhaven.com/assets?type=${assetType}`,
-    {headers: polyHavenHeaders},
+    { headers: polyHavenHeaders },
   );
   if (!result.ok) {
     throw new Error(`Poly Haven catalog request failed (${result.status}).`);
@@ -143,7 +143,7 @@ const downloadPolyHavenFile = async ({
   ) {
     throw new Error("Poly Haven returned an unsupported file host.");
   }
-  fs.mkdirSync(path.dirname(filePath), {recursive: true});
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
   if (!fs.existsSync(filePath)) {
     const download = await fetch(sourceUrl, {
       headers: polyHavenHeaders,
@@ -199,7 +199,12 @@ const studioApi = (): Plugin => ({
         const assetName = decodeURIComponent(
           request.url.replace("/antv-studio-previews/", "").split("?")[0],
         );
-        const filePath = path.resolve("output", "antv-studio", "all", assetName);
+        const filePath = path.resolve(
+          "output",
+          "antv-studio",
+          "all",
+          assetName,
+        );
         if (!assetName.endsWith(".png") || !fs.existsSync(filePath)) {
           response.statusCode = 404;
           response.end("Not found");
@@ -270,7 +275,7 @@ const studioApi = (): Plugin => ({
           response.statusCode = 206;
           response.setHeader("Content-Range", `bytes ${start}-${end}/${size}`);
           response.setHeader("Content-Length", end - start + 1);
-          fs.createReadStream(filePath, {start, end}).pipe(response);
+          fs.createReadStream(filePath, { start, end }).pipe(response);
           return;
         }
         response.statusCode = 200;
@@ -280,9 +285,7 @@ const studioApi = (): Plugin => ({
       }
 
       if (
-        request.url?.startsWith(
-          "/advanced-studio2-assets/polyhaven/models/",
-        ) &&
+        request.url?.startsWith("/advanced-studio2-assets/polyhaven/models/") &&
         request.method === "GET"
       ) {
         const relativePath = decodeURIComponent(
@@ -335,9 +338,7 @@ const studioApi = (): Plugin => ({
       }
 
       if (
-        request.url?.startsWith(
-          "/advanced-studio2-assets/polyhaven/",
-        ) &&
+        request.url?.startsWith("/advanced-studio2-assets/polyhaven/") &&
         request.method === "GET"
       ) {
         const fileName = decodeURIComponent(
@@ -400,9 +401,7 @@ const studioApi = (): Plugin => ({
           );
           const catalog = await getPolyHavenCatalog(assetType);
           const matches = Object.entries(catalog)
-            .filter(
-              ([, asset]) => asset.type === polyHavenTypeCodes[assetType],
-            )
+            .filter(([, asset]) => asset.type === polyHavenTypeCodes[assetType])
             .filter(([assetId, asset]) => {
               if (!query) return true;
               return [
@@ -482,7 +481,7 @@ const studioApi = (): Plugin => ({
           }
           const filesResponse = await fetch(
             `https://api.polyhaven.com/files/${encodeURIComponent(assetId)}`,
-            {headers: polyHavenHeaders},
+            { headers: polyHavenHeaders },
           );
           if (!filesResponse.ok) {
             throw new Error(
@@ -518,9 +517,7 @@ const studioApi = (): Plugin => ({
               assetId,
               name: asset.name,
               localSrc: `/advanced-studio2-assets/polyhaven/${fileName}`,
-              localFiles: [
-                `/advanced-studio2-assets/polyhaven/${fileName}`,
-              ],
+              localFiles: [`/advanced-studio2-assets/polyhaven/${fileName}`],
               thumbnailUrl: asset.thumbnail_url,
               filesHash: asset.files_hash,
               resolution: "2k",
@@ -534,9 +531,7 @@ const studioApi = (): Plugin => ({
               `${assetId}-${source.md5}.json`,
             );
           } else if (assetType === "hdris") {
-            const source = files.hdri?.["1k"]?.hdr as
-              | PolyHavenFile
-              | undefined;
+            const source = files.hdri?.["1k"]?.hdr as PolyHavenFile | undefined;
             if (!source?.url || !source.md5) {
               throw new Error("This HDRI has no supported 1K HDR file.");
             }
@@ -553,9 +548,7 @@ const studioApi = (): Plugin => ({
               assetId,
               name: asset.name,
               localSrc: `/advanced-studio2-assets/polyhaven/${fileName}`,
-              localFiles: [
-                `/advanced-studio2-assets/polyhaven/${fileName}`,
-              ],
+              localFiles: [`/advanced-studio2-assets/polyhaven/${fileName}`],
               thumbnailUrl: asset.thumbnail_url,
               filesHash: asset.files_hash,
               resolution: "1k",
@@ -576,11 +569,7 @@ const studioApi = (): Plugin => ({
             if (!source?.url || !source.md5) {
               throw new Error("This model has no supported 1K GLTF file.");
             }
-            const modelDirectory = path.join(
-              assetDirectory,
-              "models",
-              assetId,
-            );
+            const modelDirectory = path.join(assetDirectory, "models", assetId);
             const sourceFileName = path.basename(
               decodeURIComponent(new URL(source.url).pathname),
             );
@@ -597,13 +586,8 @@ const studioApi = (): Plugin => ({
             for (const [relativePath, dependency] of Object.entries(
               source.include ?? {},
             )) {
-              const dependencyPath = path.resolve(
-                modelDirectory,
-                relativePath,
-              );
-              if (
-                !dependencyPath.startsWith(`${modelDirectory}${path.sep}`)
-              ) {
+              const dependencyPath = path.resolve(modelDirectory, relativePath);
+              if (!dependencyPath.startsWith(`${modelDirectory}${path.sep}`)) {
                 throw new Error(
                   "Poly Haven returned an invalid model dependency path.",
                 );
@@ -647,7 +631,7 @@ const studioApi = (): Plugin => ({
               2,
             ),
           );
-          sendJson(response, 200, {ok: true, selection});
+          sendJson(response, 200, { ok: true, selection });
         } catch (error) {
           sendJson(response, 422, {
             ok: false,
@@ -723,13 +707,125 @@ const studioApi = (): Plugin => ({
       }
 
       if (
+        request.url ===
+          "/api/advanced-studio5/background-video" &&
+        request.method ===
+          "POST"
+      ) {
+        try {
+          const contentType =
+            request.headers[
+              "content-type"
+            ] ?? "";
+
+          if (
+            !contentType.startsWith(
+              "video/mp4",
+            )
+          ) {
+            throw new Error(
+              "Choose an MP4 background video.",
+            );
+          }
+
+          const video =
+            await readBinaryBody(
+              request,
+              500 *
+                1024 *
+                1024,
+            );
+
+          if (
+            video.length ===
+            0
+          ) {
+            throw new Error(
+              "The uploaded background video is empty.",
+            );
+          }
+
+          const uploadRoot =
+            path.resolve(
+              "studio",
+              "public",
+              "advanced-studio5",
+              "uploads",
+            );
+
+          fs.mkdirSync(
+            uploadRoot,
+            {
+              recursive:
+                true,
+            },
+          );
+
+          const filePath =
+            path.join(
+              uploadRoot,
+              "background-video.mp4",
+            );
+
+          fs.writeFileSync(
+            filePath,
+            video,
+          );
+
+          response.statusCode =
+            200;
+
+          response.setHeader(
+            "Content-Type",
+            "application/json",
+          );
+
+          response.end(
+            JSON.stringify({
+              ok:
+                true,
+
+              src:
+                "/advanced-studio5/uploads/background-video.mp4",
+            }),
+          );
+        } catch (
+          error
+        ) {
+          response.statusCode =
+            422;
+
+          response.setHeader(
+            "Content-Type",
+            "application/json",
+          );
+
+          response.end(
+            JSON.stringify({
+              ok:
+                false,
+
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Background video upload failed.",
+            }),
+          );
+        }
+
+        return;
+      }
+
+      if (
         request.url === "/api/advanced-studio2/remove-background" &&
         request.method === "POST"
       ) {
         let temporaryDirectory = "";
         try {
           const contentType = request.headers["content-type"] ?? "";
-          if (!["image/png", "image/jpeg", "image/webp"].includes(contentType)) {
+          if (
+            !["image/png", "image/jpeg", "image/webp"].includes(contentType)
+          ) {
             throw new Error("Choose a PNG, JPEG, or WebP product image.");
           }
 
@@ -753,7 +849,7 @@ const studioApi = (): Plugin => ({
 
           // AS5 QUALITY DEBUG:
           // preserve the exact original upload before Vision touches it.
-          fs.mkdirSync(path.resolve("debug"), {recursive: true});
+          fs.mkdirSync(path.resolve("debug"), { recursive: true });
           fs.writeFileSync(
             path.resolve(`debug/original-upload.${extension}`),
             image,
@@ -775,18 +871,12 @@ const studioApi = (): Plugin => ({
           const output = fs.readFileSync(outputPath);
 
           // Preserve the exact processed cutout sent to AS5.
-          fs.mkdirSync(path.resolve("debug"), {recursive: true});
-          fs.writeFileSync(
-            path.resolve("debug/processed-product.png"),
-            output,
-          );
+          fs.mkdirSync(path.resolve("debug"), { recursive: true });
+          fs.writeFileSync(path.resolve("debug/processed-product.png"), output);
 
           // DEBUG: keep the latest Vision cutout for inspection.
-          fs.mkdirSync(path.resolve("debug"), {recursive: true});
-          fs.writeFileSync(
-            path.resolve("debug/vision-output.png"),
-            output,
-          );
+          fs.mkdirSync(path.resolve("debug"), { recursive: true });
+          fs.writeFileSync(path.resolve("debug/vision-output.png"), output);
 
           response.statusCode = 200;
           response.setHeader("Content-Type", "image/png");
@@ -806,7 +896,7 @@ const studioApi = (): Plugin => ({
           );
         } finally {
           if (temporaryDirectory) {
-            fs.rmSync(temporaryDirectory, {recursive: true, force: true});
+            fs.rmSync(temporaryDirectory, { recursive: true, force: true });
           }
         }
         return;
@@ -817,7 +907,7 @@ const studioApi = (): Plugin => ({
           const body = await readBody(request);
           const project = JSON.parse(body);
 
-          fs.mkdirSync(path.resolve("public"), {recursive: true});
+          fs.mkdirSync(path.resolve("public"), { recursive: true });
           fs.writeFileSync(
             path.resolve("public/project.json"),
             JSON.stringify(project, null, 2),
@@ -825,14 +915,13 @@ const studioApi = (): Plugin => ({
 
           response.statusCode = 200;
           response.setHeader("Content-Type", "application/json");
-          response.end(JSON.stringify({ok: true}));
+          response.end(JSON.stringify({ ok: true }));
         } catch (error) {
           response.statusCode = 500;
           response.end(
             JSON.stringify({
               ok: false,
-              error:
-                error instanceof Error ? error.message : "Save failed",
+              error: error instanceof Error ? error.message : "Save failed",
             }),
           );
         }
@@ -845,8 +934,8 @@ const studioApi = (): Plugin => ({
           const body = await readBody(request);
           const project = JSON.parse(body);
 
-          fs.mkdirSync(path.resolve("public"), {recursive: true});
-          fs.mkdirSync(path.resolve("output"), {recursive: true});
+          fs.mkdirSync(path.resolve("public"), { recursive: true });
+          fs.mkdirSync(path.resolve("output"), { recursive: true });
 
           fs.writeFileSync(
             path.resolve("public/project.json"),
@@ -896,8 +985,7 @@ const studioApi = (): Plugin => ({
           response.end(
             JSON.stringify({
               ok: false,
-              error:
-                error instanceof Error ? error.message : "Render failed",
+              error: error instanceof Error ? error.message : "Render failed",
             }),
           );
         }
@@ -919,10 +1007,12 @@ const studioApi = (): Plugin => ({
           if (!Array.isArray(props.project?.scenes)) {
             throw new Error("Advanced Studio project scenes must be an array.");
           }
-          const durationFrames = getAdvancedStudioProjectDuration(props.project);
+          const durationFrames = getAdvancedStudioProjectDuration(
+            props.project,
+          );
 
-          fs.mkdirSync(path.resolve("public"), {recursive: true});
-          fs.mkdirSync(path.resolve("output"), {recursive: true});
+          fs.mkdirSync(path.resolve("public"), { recursive: true });
+          fs.mkdirSync(path.resolve("output"), { recursive: true });
 
           fs.writeFileSync(
             path.resolve("output/advanced-project.json"),
@@ -974,11 +1064,222 @@ const studioApi = (): Plugin => ({
           response.end(
             JSON.stringify({
               ok: false,
-              error:
-                error instanceof Error ? error.message : "Render failed",
+              error: error instanceof Error ? error.message : "Render failed",
             }),
           );
         }
+
+        return;
+      }
+
+      if (
+        request.url === "/api/render-advanced5-product-template" &&
+        request.method === "POST"
+      ) {
+        try {
+          const body = await readBody(request);
+
+          const props = JSON.parse(body) as {
+            templateNumber?: string;
+            imageSrc?: string;
+            backgroundVideoSrc?: string;
+            formatId?: string;
+          };
+
+          const templateNumber = String(props.templateNumber ?? "");
+
+          const templateNumberInt = Number.parseInt(templateNumber, 10);
+
+          if (
+            !Number.isFinite(templateNumberInt) ||
+            templateNumberInt < 57 ||
+            templateNumberInt > 78
+          ) {
+            throw new Error("Invalid Product Templates 2 template.");
+          }
+
+          const formatId = props.formatId ?? "vertical";
+
+          if (!["portrait", "square", "vertical"].includes(formatId)) {
+            throw new Error("Invalid Product Templates 2 format.");
+          }
+
+          if (
+            typeof props.imageSrc !== "string" ||
+            props.imageSrc.length === 0
+          ) {
+            throw new Error("Product Templates 2 requires a product image.");
+          }
+
+          const compositionId =
+            formatId === "square"
+              ? "AdvancedStudio5ProductTemplates2Square"
+              : formatId === "vertical"
+                ? "AdvancedStudio5ProductTemplates2Vertical"
+                : "AdvancedStudio5ProductTemplates2Portrait";
+
+          fs.mkdirSync(path.resolve("output"), {
+            recursive: true,
+          });
+
+          const propsPath = path.resolve(
+            "output/advanced-studio5-product-template-project.json",
+          );
+
+          fs.writeFileSync(
+            propsPath,
+            JSON.stringify(
+              {
+                templateNumber,
+                imageSrc: props.imageSrc,
+                backgroundVideoSrc:
+                  typeof props.backgroundVideoSrc === "string" &&
+                  props.backgroundVideoSrc.length > 0
+                    ? props.backgroundVideoSrc
+                    : undefined,
+              },
+              null,
+              2,
+            ),
+          );
+
+          const outputPath = `output/advanced-studio5-product-template-${templateNumber}-${formatId}.mp4`;
+
+          const child = spawn(
+            "npx",
+            [
+              "remotion",
+              "render",
+
+              "src/advanced-studio5-product-templates2-render.ts",
+
+              compositionId,
+
+              outputPath,
+
+              "--props=output/advanced-studio5-product-template-project.json",
+
+              "--public-dir=studio/public",
+
+              "--duration=360",
+
+              "--gl=angle",
+
+              "--overwrite",
+            ],
+            {
+              cwd: process.cwd(),
+
+              stdio: "inherit",
+
+              shell: false,
+            },
+          );
+
+          child.on("close", (code) => {
+            response.statusCode = code === 0 ? 200 : 500;
+
+            response.setHeader("Content-Type", "application/json");
+
+            response.end(
+              JSON.stringify({
+                ok: code === 0,
+
+                downloadUrl:
+                  code === 0
+                    ? `/api/export-advanced5-product-template/${templateNumber}/${formatId}`
+                    : undefined,
+
+                error:
+                  code === 0
+                    ? undefined
+                    : "Product Templates 2 Remotion render failed.",
+              }),
+            );
+          });
+
+          child.on("error", (error) => {
+            response.statusCode = 500;
+
+            response.setHeader("Content-Type", "application/json");
+
+            response.end(
+              JSON.stringify({
+                ok: false,
+
+                error: error.message,
+              }),
+            );
+          });
+        } catch (error) {
+          response.statusCode = 500;
+
+          response.setHeader("Content-Type", "application/json");
+
+          response.end(
+            JSON.stringify({
+              ok: false,
+
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Product Templates 2 render failed.",
+            }),
+          );
+        }
+
+        return;
+      }
+
+      if (
+        request.url?.startsWith("/api/export-advanced5-product-template/") &&
+        request.method === "GET"
+      ) {
+        const relative = request.url
+          .replace("/api/export-advanced5-product-template/", "")
+          .split("?")[0];
+
+        const [templateNumber, formatId] = relative.split("/");
+
+        const templateNumberInt = Number.parseInt(templateNumber, 10);
+
+        if (
+          !Number.isFinite(templateNumberInt) ||
+          templateNumberInt < 57 ||
+          templateNumberInt > 78 ||
+          !["portrait", "square", "vertical"].includes(formatId)
+        ) {
+          response.statusCode = 400;
+
+          response.end("Invalid Product Templates 2 export.");
+
+          return;
+        }
+
+        const fileName = `advanced-studio5-product-template-${templateNumber}-${formatId}.mp4`;
+
+        const filePath = path.resolve("output", fileName);
+
+        if (!fs.existsSync(filePath)) {
+          response.statusCode = 404;
+
+          response.end("Product Templates 2 export not found.");
+
+          return;
+        }
+
+        response.statusCode = 200;
+
+        response.setHeader("Content-Type", "video/mp4");
+
+        response.setHeader(
+          "Content-Disposition",
+          `attachment; filename="${fileName}"`,
+        );
+
+        response.setHeader("Content-Length", fs.statSync(filePath).size);
+
+        fs.createReadStream(filePath).pipe(response);
 
         return;
       }
@@ -988,190 +1289,122 @@ const studioApi = (): Plugin => ({
         request.method === "POST"
       ) {
         try {
-          const body =
-            await readBody(
-              request,
-            );
+          const body = await readBody(request);
 
-          const props =
-            JSON.parse(
-              body,
-            );
+          const props = JSON.parse(body);
 
-          const formatId =
-            props.formatId ??
-            "vertical";
+          const formatId = props.formatId ?? "vertical";
 
-          if (
-            ![
-              "portrait",
-              "square",
-              "vertical",
-            ].includes(
-              formatId,
-            )
-          ) {
-            throw new Error(
-              "Invalid Template 57 format.",
-            );
+          if (!["portrait", "square", "vertical"].includes(formatId)) {
+            throw new Error("Invalid Template 57 format.");
           }
 
           if (
-            typeof props.imageSrc !==
-              "string" ||
-            props.imageSrc.length ===
-              0
+            typeof props.imageSrc !== "string" ||
+            props.imageSrc.length === 0
           ) {
-            throw new Error(
-              "Template 57 requires a product image.",
-            );
+            throw new Error("Template 57 requires a product image.");
           }
 
           const compositionId =
-            formatId ===
-              "square"
+            formatId === "square"
               ? "AdvancedStudio5Template57Square"
-              : formatId ===
-                  "vertical"
+              : formatId === "vertical"
                 ? "AdvancedStudio5Template57Vertical"
                 : "AdvancedStudio5Template57Portrait";
 
-          fs.mkdirSync(
-            path.resolve(
-              "output",
-            ),
-            {
-              recursive:
-                true,
-            },
-          );
+          fs.mkdirSync(path.resolve("output"), {
+            recursive: true,
+          });
 
-          const propsPath =
-            path.resolve(
-              "output/advanced-studio5-template57-project.json",
-            );
+          const propsPath = path.resolve(
+            "output/advanced-studio5-template57-project.json",
+          );
 
           fs.writeFileSync(
             propsPath,
             JSON.stringify(
               {
-                imageSrc:
-                  props.imageSrc,
+                imageSrc: props.imageSrc,
               },
               null,
               2,
             ),
           );
 
-          const outputPath =
-            `output/advanced-studio5-template57-${formatId}.mp4`;
+          const outputPath = `output/advanced-studio5-template57-${formatId}.mp4`;
 
-          const child =
-            spawn(
-              "npx",
-              [
-                "remotion",
-                "render",
+          const child = spawn(
+            "npx",
+            [
+              "remotion",
+              "render",
 
-                "src/advanced-studio5-template57-render.ts",
+              "src/advanced-studio5-template57-render.ts",
 
-                compositionId,
+              compositionId,
 
-                outputPath,
+              outputPath,
 
-                "--props=output/advanced-studio5-template57-project.json",
+              "--props=output/advanced-studio5-template57-project.json",
 
-                "--public-dir=studio/public",
+              "--public-dir=studio/public",
 
-                "--duration=360",
+              "--duration=360",
 
-                "--gl=angle",
+              "--gl=angle",
 
-                "--overwrite",
-              ],
-              {
-                cwd:
-                  process.cwd(),
+              "--overwrite",
+            ],
+            {
+              cwd: process.cwd(),
 
-                stdio:
-                  "inherit",
+              stdio: "inherit",
 
-                shell:
-                  false,
-              },
+              shell: false,
+            },
+          );
+
+          child.on("close", (code) => {
+            response.statusCode = code === 0 ? 200 : 500;
+
+            response.setHeader("Content-Type", "application/json");
+
+            response.end(
+              JSON.stringify({
+                ok: code === 0,
+
+                downloadUrl: `/api/export-advanced5-template57/${formatId}`,
+
+                error:
+                  code === 0
+                    ? undefined
+                    : "Template 57 Remotion render failed.",
+              }),
             );
+          });
 
-          child.on(
-            "close",
-            (
-              code,
-            ) => {
-              response.statusCode =
-                code === 0
-                  ? 200
-                  : 500;
+          child.on("error", (error) => {
+            response.statusCode = 500;
 
-              response.setHeader(
-                "Content-Type",
-                "application/json",
-              );
+            response.setHeader("Content-Type", "application/json");
 
-              response.end(
-                JSON.stringify({
-                  ok:
-                    code === 0,
+            response.end(
+              JSON.stringify({
+                ok: false,
 
-                  downloadUrl:
-                    `/api/export-advanced5-template57/${formatId}`,
+                error: error.message,
+              }),
+            );
+          });
+        } catch (error) {
+          response.statusCode = 500;
 
-                  error:
-                    code === 0
-                      ? undefined
-                      : "Template 57 Remotion render failed.",
-                }),
-              );
-            },
-          );
-
-          child.on(
-            "error",
-            (
-              error,
-            ) => {
-              response.statusCode =
-                500;
-
-              response.setHeader(
-                "Content-Type",
-                "application/json",
-              );
-
-              response.end(
-                JSON.stringify({
-                  ok:
-                    false,
-
-                  error:
-                    error.message,
-                }),
-              );
-            },
-          );
-        } catch (
-          error
-        ) {
-          response.statusCode =
-            500;
-
-          response.setHeader(
-            "Content-Type",
-            "application/json",
-          );
+          response.setHeader("Content-Type", "application/json");
 
           response.end(
             JSON.stringify({
-              ok:
-                false,
+              ok: false,
 
               error:
                 error instanceof Error
@@ -1185,95 +1418,53 @@ const studioApi = (): Plugin => ({
       }
 
       if (
-        request.url?.startsWith(
-          "/api/export-advanced5-template57/",
-        ) &&
-        request.method ===
-          "GET"
+        request.url?.startsWith("/api/export-advanced5-template57/") &&
+        request.method === "GET"
       ) {
-        const formatId =
-          request.url
-            .replace(
-              "/api/export-advanced5-template57/",
-              "",
-            )
-            .split(
-              "?",
-            )[0];
+        const formatId = request.url
+          .replace("/api/export-advanced5-template57/", "")
+          .split("?")[0];
 
-        if (
-          ![
-            "portrait",
-            "square",
-            "vertical",
-          ].includes(
-            formatId,
-          )
-        ) {
-          response.statusCode =
-            400;
+        if (!["portrait", "square", "vertical"].includes(formatId)) {
+          response.statusCode = 400;
 
-          response.end(
-            "Invalid Template 57 format.",
-          );
+          response.end("Invalid Template 57 format.");
 
           return;
         }
 
-        const fileName =
-          `advanced-studio5-template57-${formatId}.mp4`;
+        const fileName = `advanced-studio5-template57-${formatId}.mp4`;
 
-        const filePath =
-          path.resolve(
-            "output",
-            fileName,
-          );
+        const filePath = path.resolve("output", fileName);
 
-        if (
-          !fs.existsSync(
-            filePath,
-          )
-        ) {
-          response.statusCode =
-            404;
+        if (!fs.existsSync(filePath)) {
+          response.statusCode = 404;
 
-          response.end(
-            "Template 57 export not found.",
-          );
+          response.end("Template 57 export not found.");
 
           return;
         }
 
-        response.statusCode =
-          200;
+        response.statusCode = 200;
 
-        response.setHeader(
-          "Content-Type",
-          "video/mp4",
-        );
+        response.setHeader("Content-Type", "video/mp4");
 
         response.setHeader(
           "Content-Disposition",
           `attachment; filename="${fileName}"`,
         );
 
-        response.setHeader(
-          "Content-Length",
-          fs.statSync(
-            filePath,
-          ).size,
-        );
+        response.setHeader("Content-Length", fs.statSync(filePath).size);
 
-        fs.createReadStream(
-          filePath,
-        ).pipe(
-          response,
-        );
+        fs.createReadStream(filePath).pipe(response);
 
         return;
       }
 
-      if (request.url === "/api/render-advanced2" && request.method === "POST") {
+      if (
+        request.url === "/api/render-advanced2" &&
+        request.method === "POST"
+      ) {
         try {
           const body = await readBody(request);
           const props = JSON.parse(body);
@@ -1287,48 +1478,50 @@ const studioApi = (): Plugin => ({
             batch === 19
               ? "AdvancedStudio2ProductBatch19"
               : batch === 18
-              ? "AdvancedStudio2ProductBatch18"
-              : batch === 17
-              ? "AdvancedStudio2ProductBatch17"
-              : batch === 16
-              ? "AdvancedStudio2ProductBatch16"
-              : batch === 15
-              ? "AdvancedStudio2ProductBatch15"
-              : batch === 14
-              ? "AdvancedStudio2ProductBatch14"
-              : batch === 13
-              ? "AdvancedStudio2ProductBatch13"
-              : batch === 12
-              ? "AdvancedStudio2ProductBatch12"
-              : batch === 11
-              ? "AdvancedStudio2ProductBatch11"
-              : batch === 10
-              ? "AdvancedStudio2ProductBatch10"
-              : batch === 9
-              ? "AdvancedStudio2ProductBatch9"
-              : batch === 8
-              ? "AdvancedStudio2ProductBatch8"
-              : batch === 7
-              ? "AdvancedStudio2ProductBatch7"
-              : batch === 6
-              ? "AdvancedStudio2ProductBatch6"
-              : batch === 5
-              ? "AdvancedStudio2ProductBatch5"
-              : batch === 4
-                ? "AdvancedStudio2ProductBatch4"
-              : batch === 3
-                ? "AdvancedStudio2ProductBatch3"
-              : batch === 2
-                ? "AdvancedStudio2ProductBatch2"
-                : "AdvancedStudio2Product";
+                ? "AdvancedStudio2ProductBatch18"
+                : batch === 17
+                  ? "AdvancedStudio2ProductBatch17"
+                  : batch === 16
+                    ? "AdvancedStudio2ProductBatch16"
+                    : batch === 15
+                      ? "AdvancedStudio2ProductBatch15"
+                      : batch === 14
+                        ? "AdvancedStudio2ProductBatch14"
+                        : batch === 13
+                          ? "AdvancedStudio2ProductBatch13"
+                          : batch === 12
+                            ? "AdvancedStudio2ProductBatch12"
+                            : batch === 11
+                              ? "AdvancedStudio2ProductBatch11"
+                              : batch === 10
+                                ? "AdvancedStudio2ProductBatch10"
+                                : batch === 9
+                                  ? "AdvancedStudio2ProductBatch9"
+                                  : batch === 8
+                                    ? "AdvancedStudio2ProductBatch8"
+                                    : batch === 7
+                                      ? "AdvancedStudio2ProductBatch7"
+                                      : batch === 6
+                                        ? "AdvancedStudio2ProductBatch6"
+                                        : batch === 5
+                                          ? "AdvancedStudio2ProductBatch5"
+                                          : batch === 4
+                                            ? "AdvancedStudio2ProductBatch4"
+                                            : batch === 3
+                                              ? "AdvancedStudio2ProductBatch3"
+                                              : batch === 2
+                                                ? "AdvancedStudio2ProductBatch2"
+                                                : "AdvancedStudio2Product";
           const compositionId =
             formatId === "square"
               ? `${compositionPrefix}Square`
               : formatId === "vertical"
                 ? `${compositionPrefix}Vertical`
                 : `${compositionPrefix}Portrait`;
-          fs.mkdirSync(path.resolve("output"), {recursive: true});
-          const propsPath = path.resolve("output/advanced-studio2-project.json");
+          fs.mkdirSync(path.resolve("output"), { recursive: true });
+          const propsPath = path.resolve(
+            "output/advanced-studio2-project.json",
+          );
           fs.writeFileSync(propsPath, JSON.stringify(props, null, 2));
           const child = spawn(
             "npx",
@@ -1363,7 +1556,7 @@ const studioApi = (): Plugin => ({
           child.on("error", (error) => {
             response.statusCode = 500;
             response.setHeader("Content-Type", "application/json");
-            response.end(JSON.stringify({ok: false, error: error.message}));
+            response.end(JSON.stringify({ ok: false, error: error.message }));
           });
         } catch (error) {
           response.statusCode = 500;
@@ -1371,8 +1564,7 @@ const studioApi = (): Plugin => ({
           response.end(
             JSON.stringify({
               ok: false,
-              error:
-                error instanceof Error ? error.message : "Render failed.",
+              error: error instanceof Error ? error.message : "Render failed.",
             }),
           );
         }

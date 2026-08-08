@@ -1,82 +1,82 @@
 import React from "react";
-import {GeometryTemplate01} from "../../src/GeometryTemplate01";
-import {GeometryTemplate02} from "../../src/GeometryTemplate02";
-import {GeometryTemplate03} from "../../src/GeometryTemplate03";
-import {GeometryTemplate04} from "../../src/GeometryTemplate04";
-import {GeometryTemplate05} from "../../src/GeometryTemplate05";
-import {GeometryTemplate06} from "../../src/GeometryTemplate06";
-import {GeometryTemplate07} from "../../src/GeometryTemplate07";
-import {GeometryTemplate08} from "../../src/GeometryTemplate08";
-import {GeometryTemplate09} from "../../src/GeometryTemplate09";
-import {GeometryTemplate10} from "../../src/GeometryTemplate10";
-import {GeometryTemplate11} from "../../src/GeometryTemplate11";
-import {GeometryTemplate12} from "../../src/GeometryTemplate12";
-import {GeometryTemplate13} from "../../src/GeometryTemplate13";
-import {GeometryTemplate14} from "../../src/GeometryTemplate14";
-import {GeometryTemplate15} from "../../src/GeometryTemplate15";
-import {GeometryTemplate16} from "../../src/GeometryTemplate16";
-import {GeometryTemplate17} from "../../src/GeometryTemplate17";
-import {GeometryTemplate18} from "../../src/GeometryTemplate18";
-import {GeometryTemplate19} from "../../src/GeometryTemplate19";
-import {GeometryTemplate20} from "../../src/GeometryTemplate20";
-import {GeometryTemplate21} from "../../src/GeometryTemplate21";
-import {GeometryTemplate22} from "../../src/GeometryTemplate22";
-import {GeometryTemplate24} from "../../src/GeometryTemplate24";
-import {GeometryTemplate25} from "../../src/GeometryTemplate25";
-import {GeometryTemplate26} from "../../src/GeometryTemplate26";
-import {GeometryTemplate29} from "../../src/GeometryTemplate29";
-import {GeometryTemplate23} from "../../src/GeometryTemplate23";
-import {GeometryTemplate27} from "../../src/GeometryTemplate27";
-import {GeometryTemplate28} from "../../src/GeometryTemplate28";
-import {GeometryTemplate30} from "../../src/GeometryTemplate30";
-import {GeometryTemplate31} from "../../src/GeometryTemplate31";
-import {GeometryTemplate33} from "../../src/GeometryTemplate33";
-import {GeometryTemplate34} from "../../src/GeometryTemplate34";
-import {GeometryTemplate35} from "../../src/GeometryTemplate35";
-import {GeometryTemplate36} from "../../src/GeometryTemplate36";
-import {GeometryTemplate37} from "../../src/GeometryTemplate37";
-import {GeometryTemplate38} from "../../src/GeometryTemplate38";
-import {GeometryTemplate39} from "../../src/GeometryTemplate39";
-import {GeometryTemplate40} from "../../src/GeometryTemplate40";
-import {GeometryTemplate41} from "../../src/GeometryTemplate41";
-import {GeometryTemplate42} from "../../src/GeometryTemplate42";
-import {GeometryTemplate43} from "../../src/GeometryTemplate43";
-import {GeometryTemplate44} from "../../src/GeometryTemplate44";
-import {GeometryTemplate45} from "../../src/GeometryTemplate45";
-import {GeometryTemplate46} from "../../src/GeometryTemplate46";
-import {GeometryTemplate47} from "../../src/GeometryTemplate47";
-import {GeometryTemplate48} from "../../src/GeometryTemplate48";
-import {GeometryTemplate49} from "../../src/GeometryTemplate49";
-import {GeometryTemplate50} from "../../src/GeometryTemplate50";
-import {GeometryTemplate51} from "../../src/GeometryTemplate51";
-import {GeometryTemplate52} from "../../src/GeometryTemplate52";
-import {GeometryTemplate53} from "../../src/GeometryTemplate53";
-import {GeometryTemplate54} from "../../src/GeometryTemplate54";
-import {GeometryTemplate55} from "../../src/GeometryTemplate55";
-import {GeometryTemplate56} from "../../src/GeometryTemplate56";
-import {GeometryTemplate57} from "../../src/GeometryTemplate57";
-import {GeometryTemplate58} from "../../src/GeometryTemplate58";
-import {GeometryTemplate59} from "../../src/GeometryTemplate59";
-import {GeometryTemplate60} from "../../src/GeometryTemplate60";
-import {GeometryTemplate61} from "../../src/GeometryTemplate61";
-import {GeometryTemplate62} from "../../src/GeometryTemplate62";
-import {GeometryTemplate63} from "../../src/GeometryTemplate63";
-import {GeometryTemplate64} from "../../src/GeometryTemplate64";
-import {GeometryTemplate65} from "../../src/GeometryTemplate65";
-import {GeometryTemplate66} from "../../src/GeometryTemplate66";
-import {GeometryTemplate67} from "../../src/GeometryTemplate67";
-import {GeometryTemplate68} from "../../src/GeometryTemplate68";
-import {GeometryTemplate69} from "../../src/GeometryTemplate69";
-import {GeometryTemplate70} from "../../src/GeometryTemplate70";
-import {GeometryTemplate71} from "../../src/GeometryTemplate71";
-import {GeometryTemplate72} from "../../src/GeometryTemplate72";
-import {GeometryTemplate73} from "../../src/GeometryTemplate73";
-import {GeometryTemplate74} from "../../src/GeometryTemplate74";
-import {GeometryTemplate75} from "../../src/GeometryTemplate75";
-import {GeometryTemplate76} from "../../src/GeometryTemplate76";
-import {GeometryTemplate77} from "../../src/GeometryTemplate77";
-import {GeometryTemplate78} from "../../src/GeometryTemplate78";
-import {Player, type PlayerRef} from "@remotion/player";
+import { GeometryTemplate01 } from "../../src/GeometryTemplate01";
+import { GeometryTemplate02 } from "../../src/GeometryTemplate02";
+import { GeometryTemplate03 } from "../../src/GeometryTemplate03";
+import { GeometryTemplate04 } from "../../src/GeometryTemplate04";
+import { GeometryTemplate05 } from "../../src/GeometryTemplate05";
+import { GeometryTemplate06 } from "../../src/GeometryTemplate06";
+import { GeometryTemplate07 } from "../../src/GeometryTemplate07";
+import { GeometryTemplate08 } from "../../src/GeometryTemplate08";
+import { GeometryTemplate09 } from "../../src/GeometryTemplate09";
+import { GeometryTemplate10 } from "../../src/GeometryTemplate10";
+import { GeometryTemplate11 } from "../../src/GeometryTemplate11";
+import { GeometryTemplate12 } from "../../src/GeometryTemplate12";
+import { GeometryTemplate13 } from "../../src/GeometryTemplate13";
+import { GeometryTemplate14 } from "../../src/GeometryTemplate14";
+import { GeometryTemplate15 } from "../../src/GeometryTemplate15";
+import { GeometryTemplate16 } from "../../src/GeometryTemplate16";
+import { GeometryTemplate17 } from "../../src/GeometryTemplate17";
+import { GeometryTemplate18 } from "../../src/GeometryTemplate18";
+import { GeometryTemplate19 } from "../../src/GeometryTemplate19";
+import { GeometryTemplate20 } from "../../src/GeometryTemplate20";
+import { GeometryTemplate21 } from "../../src/GeometryTemplate21";
+import { GeometryTemplate22 } from "../../src/GeometryTemplate22";
+import { GeometryTemplate24 } from "../../src/GeometryTemplate24";
+import { GeometryTemplate25 } from "../../src/GeometryTemplate25";
+import { GeometryTemplate26 } from "../../src/GeometryTemplate26";
+import { GeometryTemplate29 } from "../../src/GeometryTemplate29";
+import { GeometryTemplate23 } from "../../src/GeometryTemplate23";
+import { GeometryTemplate27 } from "../../src/GeometryTemplate27";
+import { GeometryTemplate28 } from "../../src/GeometryTemplate28";
+import { GeometryTemplate30 } from "../../src/GeometryTemplate30";
+import { GeometryTemplate31 } from "../../src/GeometryTemplate31";
+import { GeometryTemplate33 } from "../../src/GeometryTemplate33";
+import { GeometryTemplate34 } from "../../src/GeometryTemplate34";
+import { GeometryTemplate35 } from "../../src/GeometryTemplate35";
+import { GeometryTemplate36 } from "../../src/GeometryTemplate36";
+import { GeometryTemplate37 } from "../../src/GeometryTemplate37";
+import { GeometryTemplate38 } from "../../src/GeometryTemplate38";
+import { GeometryTemplate39 } from "../../src/GeometryTemplate39";
+import { GeometryTemplate40 } from "../../src/GeometryTemplate40";
+import { GeometryTemplate41 } from "../../src/GeometryTemplate41";
+import { GeometryTemplate42 } from "../../src/GeometryTemplate42";
+import { GeometryTemplate43 } from "../../src/GeometryTemplate43";
+import { GeometryTemplate44 } from "../../src/GeometryTemplate44";
+import { GeometryTemplate45 } from "../../src/GeometryTemplate45";
+import { GeometryTemplate46 } from "../../src/GeometryTemplate46";
+import { GeometryTemplate47 } from "../../src/GeometryTemplate47";
+import { GeometryTemplate48 } from "../../src/GeometryTemplate48";
+import { GeometryTemplate49 } from "../../src/GeometryTemplate49";
+import { GeometryTemplate50 } from "../../src/GeometryTemplate50";
+import { GeometryTemplate51 } from "../../src/GeometryTemplate51";
+import { GeometryTemplate52 } from "../../src/GeometryTemplate52";
+import { GeometryTemplate53 } from "../../src/GeometryTemplate53";
+import { GeometryTemplate54 } from "../../src/GeometryTemplate54";
+import { GeometryTemplate55 } from "../../src/GeometryTemplate55";
+import { GeometryTemplate56 } from "../../src/GeometryTemplate56";
+import { GeometryTemplate57 } from "../../src/GeometryTemplate57";
+import { GeometryTemplate58 } from "../../src/GeometryTemplate58";
+import { GeometryTemplate59 } from "../../src/GeometryTemplate59";
+import { GeometryTemplate60 } from "../../src/GeometryTemplate60";
+import { GeometryTemplate61 } from "../../src/GeometryTemplate61";
+import { GeometryTemplate62 } from "../../src/GeometryTemplate62";
+import { GeometryTemplate63 } from "../../src/GeometryTemplate63";
+import { GeometryTemplate64 } from "../../src/GeometryTemplate64";
+import { GeometryTemplate65 } from "../../src/GeometryTemplate65";
+import { GeometryTemplate66 } from "../../src/GeometryTemplate66";
+import { GeometryTemplate67 } from "../../src/GeometryTemplate67";
+import { GeometryTemplate68 } from "../../src/GeometryTemplate68";
+import { GeometryTemplate69 } from "../../src/GeometryTemplate69";
+import { GeometryTemplate70 } from "../../src/GeometryTemplate70";
+import { GeometryTemplate71 } from "../../src/GeometryTemplate71";
+import { GeometryTemplate72 } from "../../src/GeometryTemplate72";
+import { GeometryTemplate73 } from "../../src/GeometryTemplate73";
+import { GeometryTemplate74 } from "../../src/GeometryTemplate74";
+import { GeometryTemplate75 } from "../../src/GeometryTemplate75";
+import { GeometryTemplate76 } from "../../src/GeometryTemplate76";
+import { GeometryTemplate77 } from "../../src/GeometryTemplate77";
+import { GeometryTemplate78 } from "../../src/GeometryTemplate78";
+import { Player, type PlayerRef } from "@remotion/player";
 import {
   Check,
   ChevronDown,
@@ -111,6 +111,8 @@ import type {
   PolyHavenCachedAssetSelection,
   PolyHavenTextureSelection,
 } from "../../src/advanced-studio2/polyhaven-assets";
+
+import { PT2BackgroundProvider } from "../../src/advanced-studio5/geometry-templates/product-templates-2/ProductTemplates2Runtime";
 
 type GeometryTemplateEntry = {
   id: string;
@@ -524,7 +526,6 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     component: GeometryTemplate58,
   },
 
-
   {
     id: "hexagonal-volume-field",
     number: "59",
@@ -665,27 +666,24 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     subtitle: "Parametric Product Lobes",
     component: GeometryTemplate78,
   },
-
-
 ];
 
-const productTemplates1Geometry =
-  geometryTemplates.filter((template) => {
-    const number = Number.parseInt(template.number, 10);
-    return number <= 56;
-  });
+const productTemplates1Geometry = geometryTemplates.filter((template) => {
+  const number = Number.parseInt(template.number, 10);
+  return number <= 56;
+});
 
-const productTemplates2Geometry =
-  geometryTemplates.filter((template) => {
-    const number = Number.parseInt(template.number, 10);
-    return number >= 57;
-  });
+const productTemplates2Geometry = geometryTemplates.filter((template) => {
+  const number = Number.parseInt(template.number, 10);
+  return number >= 57;
+});
 
-const formats: Array<{id: ProductVideoFormat; label: string; meta: string}> = [
-  {id: "portrait", label: "Portrait", meta: "1080 × 1350"},
-  {id: "square", label: "Square", meta: "1080 × 1080"},
-  {id: "vertical", label: "Vertical", meta: "1080 × 1920"},
-];
+const formats: Array<{ id: ProductVideoFormat; label: string; meta: string }> =
+  [
+    { id: "portrait", label: "Portrait", meta: "1080 × 1350" },
+    { id: "square", label: "Square", meta: "1080 × 1080" },
+    { id: "vertical", label: "Vertical", meta: "1080 × 1920" },
+  ];
 
 const archivedUserFacingTemplateIds = new Set<ProductTemplateId>([
   "porcelain-blossom",
@@ -710,19 +708,36 @@ const defaultState: ProductVideoProps = {
 export const AdvancedStudio5App: React.FC = () => {
   const playerRef = React.useRef<PlayerRef>(null);
 
-  const [
-    selectedGeometryTemplateId,
-    setSelectedGeometryTemplateId,
-  ] = React.useState(
-    geometryTemplates[0].id,
-  );
+  const [selectedGeometryTemplateId, setSelectedGeometryTemplateId] =
+    React.useState(geometryTemplates[0].id);
   const [project, setProject] = React.useState<ProductVideoProps>(defaultState);
   const [isTemplateLibraryExpanded, setIsTemplateLibraryExpanded] =
     React.useState(true);
 
   const [isTemplateLibrary2Expanded, setIsTemplateLibrary2Expanded] =
     React.useState(true);
-  const [expandedBatch, setExpandedBatch] = React.useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | null>(null);
+  const [expandedBatch, setExpandedBatch] = React.useState<
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17
+    | 18
+    | 19
+    | null
+  >(null);
   const [isProcessingImage, setIsProcessingImage] = React.useState(false);
   const [imageMessage, setImageMessage] = React.useState("");
   const [renderState, setRenderState] = React.useState<
@@ -743,9 +758,7 @@ export const AdvancedStudio5App: React.FC = () => {
   const [polyHavenMessage, setPolyHavenMessage] = React.useState("");
   const selectedGeometryTemplate =
     geometryTemplates.find(
-      (template) =>
-        template.id ===
-        selectedGeometryTemplateId,
+      (template) => template.id === selectedGeometryTemplateId,
     ) ?? geometryTemplates[0];
 
   /*
@@ -757,15 +770,13 @@ export const AdvancedStudio5App: React.FC = () => {
    *
    * Existing templates remain 6 seconds.
    */
-  const geometryTemplateNumber =
-    Number.parseInt(
-      selectedGeometryTemplate.number,
-      10,
-    );
+  const geometryTemplateNumber = Number.parseInt(
+    selectedGeometryTemplate.number,
+    10,
+  );
 
   const isProductTemplates2 =
-    geometryTemplateNumber >= 57 &&
-    geometryTemplateNumber <= 78;
+    geometryTemplateNumber >= 57 && geometryTemplateNumber <= 78;
 
   const geometryDurationInFrames =
     geometryTemplateNumber === 58
@@ -796,7 +807,7 @@ export const AdvancedStudio5App: React.FC = () => {
           `/api/advanced-studio2/polyhaven/assets?q=${encodeURIComponent(
             polyHavenSearch,
           )}&type=${polyHavenAssetType}`,
-          {signal: controller.signal},
+          { signal: controller.signal },
         );
         const result = (await response.json()) as {
           ok?: boolean;
@@ -828,7 +839,7 @@ export const AdvancedStudio5App: React.FC = () => {
     key: K,
     value: ProductVideoProps[K],
   ) => {
-    setProject((current) => ({...current, [key]: value}));
+    setProject((current) => ({ ...current, [key]: value }));
     setRenderState("idle");
     setRenderMessage("");
   };
@@ -842,23 +853,21 @@ export const AdvancedStudio5App: React.FC = () => {
     setIsProcessingImage(true);
     setImageMessage("Apple Vision is isolating your product…");
     try {
-      const response = await fetch(
-        "/api/advanced-studio2/remove-background",
-        {
-          method: "POST",
-          headers: {"Content-Type": file.type},
-          body: file,
-        },
-      );
+      const response = await fetch("/api/advanced-studio2/remove-background", {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
       if (!response.ok) {
-        const result = (await response.json()) as {error?: string};
+        const result = (await response.json()) as { error?: string };
         throw new Error(result.error || "Background removal failed.");
       }
       const productImage = await response.blob();
       const reader = new FileReader();
       const imageSrc = await new Promise<string>((resolve, reject) => {
         reader.onload = () => resolve(String(reader.result ?? ""));
-        reader.onerror = () => reject(new Error("The product image could not be read."));
+        reader.onerror = () =>
+          reject(new Error("The product image could not be read."));
         reader.readAsDataURL(productImage);
       });
       update("imageSrc", imageSrc);
@@ -876,10 +885,75 @@ export const AdvancedStudio5App: React.FC = () => {
     }
   };
 
-  const handleMediaUpload = async (
-    slot: ProductMediaSlot,
-    file?: File,
-  ) => {
+  const [backgroundVideoSrc, setBackgroundVideoSrc] =
+    React.useState<string>("");
+
+  const [backgroundVideoName, setBackgroundVideoName] =
+    React.useState<string>("");
+
+  const handleBackgroundVideoUpload = async (file?: File) => {
+    if (!file) {
+      return;
+    }
+
+    const accepted = ["video/mp4", "video/webm", "video/quicktime"];
+
+    if (!accepted.includes(file.type)) {
+      setImageMessage("Choose an MP4 background video.");
+
+      return;
+    }
+
+    setImageMessage("Loading background video…");
+
+    try {
+      const response = await fetch("/api/advanced-studio5/background-video", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": file.type,
+        },
+
+        body: file,
+      });
+
+      const result = (await response.json()) as {
+        ok?: boolean;
+        src?: string;
+        fileName?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !result.ok || !result.src) {
+        throw new Error(result.error || "Background video upload failed.");
+      }
+
+      /*
+       * Cache bust after replacement.
+       * Both Player and CLI renderer receive a real URL,
+       * never a data: URL.
+       */
+      const src = `${result.src}?v=${Date.now()}`;
+
+      setBackgroundVideoSrc(src);
+
+      setBackgroundVideoName(file.name);
+
+      setImageMessage("Background video ready.");
+
+      playerRef.current?.seekTo(0);
+
+      window.setTimeout(() => playerRef.current?.play(), 50);
+    } catch (error) {
+      setImageMessage(
+        error instanceof Error
+          ? error.message
+          : "Background video upload failed.",
+      );
+    }
+  };
+
+  const handleMediaUpload = async (slot: ProductMediaSlot, file?: File) => {
     if (!file) return;
     const acceptedImages = ["image/png", "image/jpeg", "image/webp"];
     const acceptedVideos = ["video/mp4", "video/webm", "video/quicktime"];
@@ -888,7 +962,7 @@ export const AdvancedStudio5App: React.FC = () => {
       setImageMessage(
         slot.kind === "image"
           ? "Choose a PNG, JPEG, or WebP image."
-          : "Choose an MP4, WebM, or QuickTime video.",
+          : "Choose an MP4 background video.",
       );
       return;
     }
@@ -905,12 +979,12 @@ export const AdvancedStudio5App: React.FC = () => {
           "/api/advanced-studio2/remove-background",
           {
             method: "POST",
-            headers: {"Content-Type": file.type},
+            headers: { "Content-Type": file.type },
             body: file,
           },
         );
         if (!response.ok) {
-          const result = (await response.json()) as {error?: string};
+          const result = (await response.json()) as { error?: string };
           throw new Error(result.error || "Background removal failed.");
         }
         mediaBlob = await response.blob();
@@ -918,7 +992,8 @@ export const AdvancedStudio5App: React.FC = () => {
       const reader = new FileReader();
       const src = await new Promise<string>((resolve, reject) => {
         reader.onload = () => resolve(String(reader.result ?? ""));
-        reader.onerror = () => reject(new Error("The media could not be read."));
+        reader.onerror = () =>
+          reject(new Error("The media could not be read."));
         reader.readAsDataURL(mediaBlob);
       });
       setProject((current) => ({
@@ -929,7 +1004,7 @@ export const AdvancedStudio5App: React.FC = () => {
           slot.id === "packageImage"
             ? src
             : current.imageSrc,
-        media: {...current.media, [slot.id]: src},
+        media: { ...current.media, [slot.id]: src },
       }));
       setRenderState("idle");
       setRenderMessage("");
@@ -960,19 +1035,14 @@ export const AdvancedStudio5App: React.FC = () => {
           : "Downloading the approved 2K diffuse texture…",
     );
     try {
-      const response = await fetch(
-        "/api/advanced-studio2/polyhaven/download",
-        {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({assetId, assetType}),
-        },
-      );
+      const response = await fetch("/api/advanced-studio2/polyhaven/download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assetId, assetType }),
+      });
       const result = (await response.json()) as {
         ok?: boolean;
-        selection?:
-          | PolyHavenTextureSelection
-          | PolyHavenCachedAssetSelection;
+        selection?: PolyHavenTextureSelection | PolyHavenCachedAssetSelection;
         error?: string;
       };
       if (!response.ok || !result.ok || !result.selection) {
@@ -989,13 +1059,13 @@ export const AdvancedStudio5App: React.FC = () => {
         );
       }
       setPolyHavenState("idle");
-      setPolyHavenMessage(`${result.selection.name} is cached and render-ready.`);
+      setPolyHavenMessage(
+        `${result.selection.name} is cached and render-ready.`,
+      );
     } catch (error) {
       setPolyHavenState("error");
       setPolyHavenMessage(
-        error instanceof Error
-          ? error.message
-          : "Poly Haven download failed.",
+        error instanceof Error ? error.message : "Poly Haven download failed.",
       );
     }
   };
@@ -1023,38 +1093,40 @@ export const AdvancedStudio5App: React.FC = () => {
     setRenderState("rendering");
     setRenderMessage("Rendering the exact preview composition…");
     try {
-      const isTemplate57 =
-        selectedGeometryTemplate.number ===
-        "57";
+      const templateNumber = Number.parseInt(
+        selectedGeometryTemplate.number,
+        10,
+      );
 
-      const response =
-        await fetch(
-          isTemplate57
-            ? "/api/render-advanced5-template57"
-            : "/api/render-advanced2",
-          {
-            method:
-              "POST",
+      const isProductTemplates2 = templateNumber >= 57;
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+      const response = await fetch(
+        isProductTemplates2
+          ? "/api/render-advanced5-product-template"
+          : "/api/render-advanced2",
+        {
+          method: "POST",
 
-            body:
-              JSON.stringify(
-                isTemplate57
-                  ? {
-                      imageSrc:
-                        project.imageSrc,
-
-                      formatId:
-                        project.formatId,
-                    }
-                  : project,
-              ),
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+
+          body: JSON.stringify(
+            isProductTemplates2
+              ? {
+                  templateNumber: selectedGeometryTemplate.number,
+
+                  imageSrc: project.imageSrc,
+
+                  backgroundVideoSrc: backgroundVideoSrc || undefined,
+
+                  formatId: project.formatId,
+                }
+              : project,
+          ),
+        },
+      );
+
       const result = (await response.json()) as {
         ok?: boolean;
         downloadUrl?: string;
@@ -1067,7 +1139,9 @@ export const AdvancedStudio5App: React.FC = () => {
       setRenderMessage("Your product video is ready.");
     } catch (error) {
       setRenderState("error");
-      setRenderMessage(error instanceof Error ? error.message : "Render failed.");
+      setRenderMessage(
+        error instanceof Error ? error.message : "Render failed.",
+      );
     }
   };
 
@@ -1089,9 +1163,8 @@ export const AdvancedStudio5App: React.FC = () => {
             <a
               className="as2-button secondary"
               href={
-                selectedGeometryTemplate.number ===
-                "57"
-                  ? `/api/export-advanced5-template57/${project.formatId}`
+                Number.parseInt(selectedGeometryTemplate.number, 10) >= 57
+                  ? `/api/export-advanced5-product-template/${selectedGeometryTemplate.number}/${project.formatId}`
                   : `/api/export-advanced2/${project.formatId}`
               }
             >
@@ -1139,9 +1212,7 @@ export const AdvancedStudio5App: React.FC = () => {
             className="as2-template-folder"
             type="button"
             aria-expanded={isTemplateLibraryExpanded}
-            onClick={() =>
-              setIsTemplateLibraryExpanded((current) => !current)
-            }
+            onClick={() => setIsTemplateLibraryExpanded((current) => !current)}
           >
             <span className="as2-folder-icon">
               <Folder size={20} fill="currentColor" />
@@ -1163,8 +1234,7 @@ export const AdvancedStudio5App: React.FC = () => {
             <div className="as2-template-library-folders">
               <div className="as2-template-grid">
                 {productTemplates1Geometry.map((template) => {
-                  const selected =
-                    selectedGeometryTemplate.id === template.id;
+                  const selected = selectedGeometryTemplate.id === template.id;
 
                   return (
                     <button
@@ -1179,10 +1249,7 @@ export const AdvancedStudio5App: React.FC = () => {
                         setSelectedGeometryTemplateId(template.id);
                         playerRef.current?.seekTo(0);
 
-                        window.setTimeout(
-                          () => playerRef.current?.play(),
-                          50,
-                        );
+                        window.setTimeout(() => playerRef.current?.play(), 50);
                       }}
                     >
                       <div
@@ -1191,9 +1258,7 @@ export const AdvancedStudio5App: React.FC = () => {
                           background:
                             "radial-gradient(circle at 50% 40%, #253650, #07090d 72%)",
                           color: "#ffffff",
-                          borderColor: selected
-                            ? "#8fc5ff88"
-                            : "#8fc5ff33",
+                          borderColor: selected ? "#8fc5ff88" : "#8fc5ff33",
                         }}
                       >
                         <span
@@ -1205,9 +1270,7 @@ export const AdvancedStudio5App: React.FC = () => {
                         <b>{template.number}</b>
 
                         <em>
-                          {template.number === "01"
-                            ? "ASSEMBLY"
-                            : "GEOMETRY"}
+                          {template.number === "01" ? "ASSEMBLY" : "GEOMETRY"}
                         </em>
                       </div>
 
@@ -1226,9 +1289,7 @@ export const AdvancedStudio5App: React.FC = () => {
             className="as2-template-folder"
             type="button"
             aria-expanded={isTemplateLibrary2Expanded}
-            onClick={() =>
-              setIsTemplateLibrary2Expanded((current) => !current)
-            }
+            onClick={() => setIsTemplateLibrary2Expanded((current) => !current)}
           >
             <span className="as2-folder-icon">
               <Folder size={20} fill="currentColor" />
@@ -1250,8 +1311,7 @@ export const AdvancedStudio5App: React.FC = () => {
             <div className="as2-template-library-folders">
               <div className="as2-template-grid">
                 {productTemplates2Geometry.map((template) => {
-                  const selected =
-                    selectedGeometryTemplate.id === template.id;
+                  const selected = selectedGeometryTemplate.id === template.id;
 
                   return (
                     <button
@@ -1266,10 +1326,7 @@ export const AdvancedStudio5App: React.FC = () => {
                         setSelectedGeometryTemplateId(template.id);
                         playerRef.current?.seekTo(0);
 
-                        window.setTimeout(
-                          () => playerRef.current?.play(),
-                          50,
-                        );
+                        window.setTimeout(() => playerRef.current?.play(), 50);
                       }}
                     >
                       <div
@@ -1278,9 +1335,7 @@ export const AdvancedStudio5App: React.FC = () => {
                           background:
                             "radial-gradient(circle at 50% 40%, #253650, #07090d 72%)",
                           color: "#ffffff",
-                          borderColor: selected
-                            ? "#8fc5ff88"
-                            : "#8fc5ff33",
+                          borderColor: selected ? "#8fc5ff88" : "#8fc5ff33",
                         }}
                       >
                         <span
@@ -1303,7 +1358,6 @@ export const AdvancedStudio5App: React.FC = () => {
               </div>
             </div>
           ) : null}
-
         </aside>
 
         <section className="as2-stage-column">
@@ -1331,22 +1385,26 @@ export const AdvancedStudio5App: React.FC = () => {
           <div className="as2-stage">
             <div
               className="as2-player-frame"
-              style={{aspectRatio: `${format.width} / ${format.height}`}}
+              style={{ aspectRatio: `${format.width} / ${format.height}` }}
             >
-              <Player
-                ref={playerRef}
-                component={selectedGeometryTemplate.component}
-                inputProps={{imageSrc: project.imageSrc}}
-                durationInFrames={geometryDurationInFrames}
-                fps={30}
-                compositionWidth={format.width}
-                compositionHeight={format.height}
-                style={{width: "100%", height: "100%"}}
-                controls
-                loop
-                autoPlay
-                acknowledgeRemotionLicense
-              />
+              <PT2BackgroundProvider
+                backgroundVideoSrc={backgroundVideoSrc || undefined}
+              >
+                <Player
+                  ref={playerRef}
+                  component={selectedGeometryTemplate.component}
+                  inputProps={{ imageSrc: project.imageSrc }}
+                  durationInFrames={geometryDurationInFrames}
+                  fps={30}
+                  compositionWidth={format.width}
+                  compositionHeight={format.height}
+                  style={{ width: "100%", height: "100%" }}
+                  controls
+                  loop
+                  autoPlay
+                  acknowledgeRemotionLicense
+                />
+              </PT2BackgroundProvider>
             </div>
           </div>
 
@@ -1460,129 +1518,77 @@ export const AdvancedStudio5App: React.FC = () => {
           {imageMessage ? (
             <div className="as2-image-message">{imageMessage}</div>
           ) : null}
-
           <section className="as2-polyhaven">
-              <div className="as2-polyhaven-heading">
-                <div>
-                  <strong>Poly Haven assets</strong>
-                  <small>
-                    Official textures, HDRIs, and models
-                  </small>
-                </div>
-                {selectedPolyHavenAsset ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (polyHavenAssetType === "textures") {
-                        update("polyHavenTexture", undefined);
-                      } else {
-                        setPolyHavenCachedAsset(undefined);
-                      }
-                    }}
-                  >
-                    Clear
-                  </button>
-                ) : null}
+            <div className="as2-polyhaven-heading">
+              <div>
+                <strong>Background video</strong>
+                <small>Upload an MP4 background for your product scene</small>
               </div>
-              <div className="as2-polyhaven-tabs">
-                {(
-                  [
-                    ["textures", "Materials"],
-                    ["hdris", "HDRIs"],
-                    ["models", "Models"],
-                  ] as const
-                ).map(([assetType, label]) => (
-                  <button
-                    key={assetType}
-                    type="button"
-                    className={
-                      polyHavenAssetType === assetType ? "active" : ""
-                    }
-                    onClick={() => {
-                      setPolyHavenAssetType(assetType);
-                      setPolyHavenSearch("");
-                      setPolyHavenMessage("");
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
+
+              {backgroundVideoSrc ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBackgroundVideoSrc("");
+                    setBackgroundVideoName("");
+                    setImageMessage("Background video removed.");
+                    playerRef.current?.seekTo(0);
+                  }}
+                >
+                  Clear
+                </button>
+              ) : null}
+            </div>
+
+            <label
+              className="as2-upload"
+              style={{
+                minHeight: 150,
+                cursor: "pointer",
+              }}
+            >
+              <div>
+                <Film size={30} />
+
+                <strong>
+                  {backgroundVideoSrc
+                    ? "Replace background video"
+                    : "Upload background MP4"}
+                </strong>
+
+                <span>{backgroundVideoName || "MP4, WebM, or QuickTime"}</span>
               </div>
-              {selectedPolyHavenAsset ? (
-                <div className="as2-polyhaven-selected">
-                  <img
-                    src={selectedPolyHavenAsset.thumbnailUrl}
-                    alt=""
-                  />
-                  <div>
-                    <strong>{selectedPolyHavenAsset.name}</strong>
-                    <small>
-                      {polyHavenAssetType === "models"
-                        ? "1K GLTF package · cached locally"
-                        : polyHavenAssetType === "hdris"
-                          ? "1K HDR environment · cached locally"
-                          : "2K diffuse JPG · cached locally"}
-                    </small>
-                  </div>
-                  <Check size={16} />
-                </div>
-              ) : null}
-              <label className="as2-polyhaven-search">
-                <Search size={15} />
-                <input
-                  value={polyHavenSearch}
-                  onChange={(event) => setPolyHavenSearch(event.target.value)}
-                  placeholder={
-                    polyHavenAssetType === "models"
-                      ? "Search rocks, architecture, objects…"
-                      : polyHavenAssetType === "hdris"
-                        ? "Search studio, sky, interior…"
-                        : "Search stone, metal, fabric…"
-                  }
-                />
-              </label>
-              <div className="as2-polyhaven-grid">
-                {polyHavenAssets.map((asset) => (
-                  <button
-                    key={asset.assetId}
-                    type="button"
-                    className={
-                      selectedPolyHavenAsset?.assetId === asset.assetId
-                        ? "selected"
-                        : ""
-                    }
-                    disabled={polyHavenState === "downloading"}
-                    onClick={() =>
-                      selectPolyHavenAsset(
-                        asset.assetId,
-                        polyHavenAssetType,
-                      )
-                    }
-                    title={asset.description}
-                  >
-                    <img src={asset.thumbnailUrl} alt="" />
-                    <span>{asset.name}</span>
-                  </button>
-                ))}
-              </div>
-              {polyHavenState === "loading" ? (
-                <div className="as2-polyhaven-message">
-                  Loading Poly Haven {polyHavenAssetType}…
-                </div>
-              ) : null}
-              {polyHavenMessage ? (
-                <div className="as2-polyhaven-message">
-                  {polyHavenMessage}
-                </div>
-              ) : null}
-              <a
-                className="as2-polyhaven-credit"
-                href="https://polyhaven.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Powered by Poly Haven · CC0
-              </a>
+
+              <input
+                type="file"
+                accept="video/mp4"
+                onChange={(event) =>
+                  void handleBackgroundVideoUpload(event.target.files?.[0])
+                }
+              />
+
+              <b>
+                <Upload size={15} />
+                {backgroundVideoSrc ? "Replace video" : "Choose video"}
+              </b>
+            </label>
+
+            {backgroundVideoSrc ? (
+              <video
+                src={backgroundVideoSrc}
+                muted
+                playsInline
+                controls
+                style={{
+                  width: "100%",
+                  marginTop: 12,
+                  borderRadius: 10,
+                  display: "block",
+                  maxHeight: 180,
+                  objectFit: "cover",
+                }}
+              />
+            ) : null}
           </section>
 
           <div className="as2-field-group">
