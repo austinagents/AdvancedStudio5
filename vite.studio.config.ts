@@ -707,6 +707,129 @@ const studioApi = (): Plugin => ({
       }
 
       if (
+        request.url === "/api/advanced-studio5/product-model" &&
+        request.method === "POST"
+      ) {
+        try {
+          const model = await readBinaryBody(
+            request,
+            500 * 1024 * 1024,
+          );
+
+          if (model.length === 0) {
+            throw new Error(
+              "The uploaded USDZ product is empty.",
+            );
+          }
+
+          const uploadRoot = path.resolve(
+            "studio",
+            "public",
+            "advanced-studio5",
+            "uploads",
+          );
+
+          fs.mkdirSync(
+            uploadRoot,
+            {
+              recursive: true,
+            },
+          );
+
+          const modelPath = path.join(
+            uploadRoot,
+            "product-model.usdz",
+          );
+
+          const previewPath = path.join(
+            uploadRoot,
+            "product-model.png",
+          );
+
+          fs.writeFileSync(
+            modelPath,
+            model,
+          );
+
+          /*
+           * Convert USDZ -> transparent PNG using macOS
+           * SceneKit.
+           *
+           * Existing geometry itself is NOT modified.
+           */
+          const renderResult =
+            await runProcess(
+              "xcrun",
+              [
+                "swift",
+                path.resolve(
+                  "scripts/render-usdz-product.swift",
+                ),
+                modelPath,
+                previewPath,
+              ],
+            );
+
+          if (
+            renderResult.code !== 0 ||
+            !fs.existsSync(previewPath)
+          ) {
+            throw new Error(
+              renderResult.stderr.trim() ||
+                "Could not render USDZ product preview.",
+            );
+          }
+
+          response.statusCode = 200;
+
+          response.setHeader(
+            "Content-Type",
+            "application/json",
+          );
+
+          response.end(
+            JSON.stringify({
+              ok: true,
+
+              /*
+               * Preserve the real model for future direct
+               * 3D use.
+               */
+              src:
+                "/advanced-studio5/uploads/product-model.usdz",
+
+              /*
+               * Existing geometry receives this exact
+               * transparent PNG through imageSrc.
+               */
+              previewSrc:
+                "/advanced-studio5/uploads/product-model.png",
+            }),
+          );
+        } catch (error) {
+          response.statusCode = 422;
+
+          response.setHeader(
+            "Content-Type",
+            "application/json",
+          );
+
+          response.end(
+            JSON.stringify({
+              ok: false,
+
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "USDZ product upload failed.",
+            }),
+          );
+        }
+
+        return;
+      }
+
+      if (
         request.url === "/api/advanced-studio5/background-video" &&
         request.method === "POST"
       ) {

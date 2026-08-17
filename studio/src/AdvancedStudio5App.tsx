@@ -844,8 +844,102 @@ export const AdvancedStudio5App: React.FC = () => {
     setRenderMessage("");
   };
 
+  const [productModelSrc, setProductModelSrc] =
+    React.useState<string>("");
+
+  const [productModelName, setProductModelName] =
+    React.useState<string>("");
+
   const handleUpload = async (file?: File) => {
     if (!file) return;
+
+    const isUsdz =
+      file.name.toLowerCase().endsWith(".usdz");
+
+    if (isUsdz) {
+      setIsProcessingImage(true);
+      setImageMessage("Uploading USDZ product…");
+
+      try {
+        const response = await fetch(
+          "/api/advanced-studio5/product-model",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "model/vnd.usdz+zip",
+            },
+            body: file,
+          },
+        );
+
+        const result = (await response.json()) as {
+          ok?: boolean;
+          src?: string;
+          previewSrc?: string;
+          error?: string;
+        };
+
+        if (
+          !response.ok ||
+          !result.ok ||
+          !result.src ||
+          !result.previewSrc
+        ) {
+          throw new Error(
+            result.error || "USDZ product upload failed.",
+          );
+        }
+
+        const version =
+          Date.now();
+
+        /*
+         * Keep the original USDZ available.
+         */
+        setProductModelSrc(
+          `${result.src}?v=${version}`,
+        );
+
+        setProductModelName(
+          file.name,
+        );
+
+        /*
+         * Feed the automatically-rendered transparent PNG
+         * into the EXISTING image input.
+         *
+         * No geometry code changes.
+         */
+        update(
+          "imageSrc",
+          `${result.previewSrc}?v=${version}`,
+        );
+
+        setImageMessage(
+          "USDZ product loaded into existing geometry.",
+        );
+
+        playerRef.current?.seekTo(0);
+
+        window.setTimeout(
+          () => {
+            playerRef.current?.play();
+          },
+          100,
+        );
+      } catch (error) {
+        setImageMessage(
+          error instanceof Error
+            ? error.message
+            : "USDZ product upload failed.",
+        );
+      } finally {
+        setIsProcessingImage(false);
+      }
+
+      return;
+    }
+
     if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
       setImageMessage("Choose a PNG, JPEG, or WebP product image.");
       return;
@@ -1495,13 +1589,21 @@ export const AdvancedStudio5App: React.FC = () => {
               ) : (
                 <div>
                   <ImagePlus size={30} />
-                  <strong>Upload product image</strong>
-                  <span>Apple Vision removes the background on this Mac</span>
+                  <strong>
+                    {productModelSrc
+                      ? "3D product uploaded"
+                      : "Upload product"}
+                  </strong>
+                  <span>
+                    {productModelSrc
+                      ? productModelName
+                      : "PNG, JPEG, WebP, or USDZ"}
+                  </span>
                 </div>
               )}
               <input
                 type="file"
-                accept="image/png,image/jpeg,image/webp"
+                accept="image/png,image/jpeg,image/webp,.usdz,model/vnd.usdz+zip"
                 disabled={isProcessingImage}
                 onChange={(event) => handleUpload(event.target.files?.[0])}
               />
@@ -1511,7 +1613,9 @@ export const AdvancedStudio5App: React.FC = () => {
                   ? "Removing background…"
                   : project.imageSrc
                     ? "Replace image"
-                    : "Choose image"}
+                    : productModelSrc
+                      ? "Replace product"
+                      : "Choose product"}
               </b>
             </label>
           )}
