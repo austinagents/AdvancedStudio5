@@ -55,27 +55,6 @@ import { GeometryTemplate54 } from "../../src/GeometryTemplate54";
 import { GeometryTemplate55 } from "../../src/GeometryTemplate55";
 import { GeometryTemplate56 } from "../../src/GeometryTemplate56";
 import { GeometryTemplate57 } from "../../src/GeometryTemplate57";
-import { GeometryTemplate58 } from "../../src/GeometryTemplate58";
-import { GeometryTemplate59 } from "../../src/GeometryTemplate59";
-import { GeometryTemplate60 } from "../../src/GeometryTemplate60";
-import { GeometryTemplate61 } from "../../src/GeometryTemplate61";
-import { GeometryTemplate62 } from "../../src/GeometryTemplate62";
-import { GeometryTemplate63 } from "../../src/GeometryTemplate63";
-import { GeometryTemplate64 } from "../../src/GeometryTemplate64";
-import { GeometryTemplate65 } from "../../src/GeometryTemplate65";
-import { GeometryTemplate66 } from "../../src/GeometryTemplate66";
-import { GeometryTemplate67 } from "../../src/GeometryTemplate67";
-import { GeometryTemplate68 } from "../../src/GeometryTemplate68";
-import { GeometryTemplate69 } from "../../src/GeometryTemplate69";
-import { GeometryTemplate70 } from "../../src/GeometryTemplate70";
-import { GeometryTemplate71 } from "../../src/GeometryTemplate71";
-import { GeometryTemplate72 } from "../../src/GeometryTemplate72";
-import { GeometryTemplate73 } from "../../src/GeometryTemplate73";
-import { GeometryTemplate74 } from "../../src/GeometryTemplate74";
-import { GeometryTemplate75 } from "../../src/GeometryTemplate75";
-import { GeometryTemplate76 } from "../../src/GeometryTemplate76";
-import { GeometryTemplate77 } from "../../src/GeometryTemplate77";
-import { GeometryTemplate78 } from "../../src/GeometryTemplate78";
 import { Player, type PlayerRef } from "@remotion/player";
 import {
   Check,
@@ -518,160 +497,8 @@ const geometryTemplates: GeometryTemplateEntry[] = [
     subtitle: "Product-Driven Volume",
     component: GeometryTemplate57,
   },
-  {
-    id: "skyscraper-billboard",
-    number: "58",
-    name: "Skyscraper Billboard",
-    subtitle: "Vertical Billboard Environment",
-    component: GeometryTemplate58,
-  },
 
-  {
-    id: "hexagonal-volume-field",
-    number: "59",
-    name: "Hexagonal Volume Field",
-    subtitle: "Hex Prism Volume",
-    component: GeometryTemplate59,
-  },
-  {
-    id: "dual-mesh-cells",
-    number: "60",
-    name: "Dual Mesh Cells",
-    subtitle: "Extruded Dual Topology",
-    component: GeometryTemplate60,
-  },
-  {
-    id: "geodesic-fiber-body",
-    number: "61",
-    name: "Geodesic Fiber Body",
-    subtitle: "Structural Product Network",
-    component: GeometryTemplate61,
-  },
-  {
-    id: "inset-pyramid-field",
-    number: "62",
-    name: "Inset Pyramid Field",
-    subtitle: "Product Frustum Field",
-    component: GeometryTemplate62,
-  },
-  {
-    id: "voronoi-depth-crystal",
-    number: "63",
-    name: "Voronoi Depth Crystal",
-    subtitle: "Extruded Crystal Cells",
-    component: GeometryTemplate63,
-  },
-  {
-    id: "contour-rib-architecture",
-    number: "64",
-    name: "Contour Rib Architecture",
-    subtitle: "Silhouette Rib Volume",
-    component: GeometryTemplate64,
-  },
-  {
-    id: "radial-pin-sculpture",
-    number: "65",
-    name: "Radial Pin Sculpture",
-    subtitle: "Attractor Pin Field",
-    component: GeometryTemplate65,
-  },
-  {
-    id: "boolean-slice-volume",
-    number: "66",
-    name: "Boolean Slice Volume",
-    subtitle: "Spatial Volume Cuts",
-    component: GeometryTemplate66,
-  },
-  {
-    id: "voxel-octree-body",
-    number: "67",
-    name: "Voxel Octree Body",
-    subtitle: "Adaptive Spatial Voxels",
-    component: GeometryTemplate67,
-  },
-  {
-    id: "helical-strand-volume",
-    number: "68",
-    name: "Helical Strand Volume",
-    subtitle: "Product Tube Helices",
-    component: GeometryTemplate68,
-  },
-  {
-    id: "icosphere-pressure-body",
-    number: "69",
-    name: "Icosphere Pressure Body",
-    subtitle: "Packed Sphere Volume",
-    component: GeometryTemplate69,
-  },
-  {
-    id: "accordion-pleat-surface",
-    number: "70",
-    name: "Accordion Pleat Surface",
-    subtitle: "Continuous Fold Geometry",
-    component: GeometryTemplate70,
-  },
-  {
-    id: "tensegrity-product-cage",
-    number: "71",
-    name: "Tensegrity Product Cage",
-    subtitle: "Strut + Cable Structure",
-    component: GeometryTemplate71,
-  },
-  {
-    id: "implicit-metaball-body",
-    number: "72",
-    name: "Implicit Metaball Body",
-    subtitle: "Marching Cubes Surface",
-    component: GeometryTemplate72,
-  },
-  {
-    id: "lamella-fan-field",
-    number: "73",
-    name: "Lamella Fan Field",
-    subtitle: "Kinetic Product Fins",
-    component: GeometryTemplate73,
-  },
-  {
-    id: "rotational-lathe-body",
-    number: "74",
-    name: "Rotational Lathe Body",
-    subtitle: "Revolved Product Profile",
-    component: GeometryTemplate74,
-  },
-  {
-    id: "chainmail-ring-field",
-    number: "75",
-    name: "Chainmail Ring Field",
-    subtitle: "Interlocking Product Rings",
-    component: GeometryTemplate75,
-  },
-  {
-    id: "deformation-lattice-body",
-    number: "76",
-    name: "Deformation Lattice Body",
-    subtitle: "Twisting Control Cage",
-    component: GeometryTemplate76,
-  },
-  {
-    id: "polyhedral-granular-body",
-    number: "77",
-    name: "Polyhedral Granular Body",
-    subtitle: "Mixed Product Grains",
-    component: GeometryTemplate77,
-  },
-  {
-    id: "superformula-petal-volume",
-    number: "78",
-    name: "Superformula Petal Volume",
-    subtitle: "Parametric Product Lobes",
-    component: GeometryTemplate78,
-  },
 ];
-
-const productTemplates1Geometry = geometryTemplates.filter((template) => {
-  const number = Number.parseInt(template.number, 10);
-  return number <= 56;
-});
 
 const productTemplates2Geometry = geometryTemplates.filter((template) => {
   const number = Number.parseInt(template.number, 10);
@@ -711,8 +538,6 @@ export const AdvancedStudio5App: React.FC = () => {
   const [selectedGeometryTemplateId, setSelectedGeometryTemplateId] =
     React.useState(geometryTemplates[0].id);
   const [project, setProject] = React.useState<ProductVideoProps>(defaultState);
-  const [isTemplateLibraryExpanded, setIsTemplateLibraryExpanded] =
-    React.useState(true);
 
   const [isTemplateLibrary2Expanded, setIsTemplateLibrary2Expanded] =
     React.useState(true);
@@ -779,11 +604,9 @@ export const AdvancedStudio5App: React.FC = () => {
     geometryTemplateNumber >= 57 && geometryTemplateNumber <= 78;
 
   const geometryDurationInFrames =
-    geometryTemplateNumber === 58
-      ? 30 * 18
-      : isProductTemplates2
-        ? 30 * 12
-        : 30 * 6;
+    isProductTemplates2
+      ? 30 * 12
+      : 30 * 6;
 
   const format = productVideoFormats[project.formatId];
   const selectedTemplate =
@@ -1302,83 +1125,6 @@ export const AdvancedStudio5App: React.FC = () => {
 
       <main className="as2-workspace">
         <aside className="as2-library">
-          <button
-            className="as2-template-folder"
-            type="button"
-            aria-expanded={isTemplateLibraryExpanded}
-            onClick={() => setIsTemplateLibraryExpanded((current) => !current)}
-          >
-            <span className="as2-folder-icon">
-              <Folder size={20} fill="currentColor" />
-            </span>
-
-            <div>
-              <strong>Product Templates 1</strong>
-              <small>{productTemplates1Geometry.length} templates</small>
-            </div>
-
-            <ChevronDown
-              className="as2-folder-chevron"
-              size={17}
-              aria-hidden="true"
-            />
-          </button>
-
-          {isTemplateLibraryExpanded ? (
-            <div className="as2-template-library-folders">
-              <div className="as2-template-grid">
-                {productTemplates1Geometry.map((template) => {
-                  const selected = selectedGeometryTemplate.id === template.id;
-
-                  return (
-                    <button
-                      key={template.id}
-                      className={
-                        selected
-                          ? "as2-template-card selected"
-                          : "as2-template-card"
-                      }
-                      type="button"
-                      onClick={() => {
-                        setSelectedGeometryTemplateId(template.id);
-                        playerRef.current?.seekTo(0);
-
-                        window.setTimeout(() => playerRef.current?.play(), 50);
-                      }}
-                    >
-                      <div
-                        className="as2-template-art"
-                        style={{
-                          background:
-                            "radial-gradient(circle at 50% 40%, #253650, #07090d 72%)",
-                          color: "#ffffff",
-                          borderColor: selected ? "#8fc5ff88" : "#8fc5ff33",
-                        }}
-                      >
-                        <span
-                          style={{
-                            background: "#b9dcff",
-                          }}
-                        />
-
-                        <b>{template.number}</b>
-
-                        <em>
-                          {template.number === "01" ? "ASSEMBLY" : "GEOMETRY"}
-                        </em>
-                      </div>
-
-                      <div>
-                        <strong>{template.name}</strong>
-                        <small>{template.subtitle}</small>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-
           <button
             className="as2-template-folder"
             type="button"
