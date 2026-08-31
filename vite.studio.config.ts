@@ -1207,7 +1207,23 @@ const studioApi = (): Plugin => ({
             JSON.stringify(
               {
                 templateNumber,
-                imageSrc: props.imageSrc,
+                imageSrc:
+                  typeof props.imageSrc === "string"
+                    ? (() => {
+                        const cleanImageSrc =
+                          props.imageSrc.split("?")[0];
+
+                        if (
+                          cleanImageSrc.startsWith(
+                            "/advanced-studio5/uploads/",
+                          )
+                        ) {
+                          return `/public${cleanImageSrc}`;
+                        }
+
+                        return cleanImageSrc;
+                      })()
+                    : props.imageSrc,
                 useBackgroundVideo: props.useBackgroundVideo === true,
               },
               null,
